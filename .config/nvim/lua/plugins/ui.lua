@@ -34,6 +34,8 @@ local plugins = {
 		config = function(_, opts)
 			vim.opt.termguicolors = true
 			require("bufferline").setup(opts)
+      vim.keymap.set("n", "<leader>bd",function(n) require("mini.bufremove").delete(n,false) end, {})
+
 		end,
 	},
 	{ "echasnovski/mini.bufremove", version = "*" },
