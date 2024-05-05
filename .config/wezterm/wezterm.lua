@@ -5,11 +5,10 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
-
+config.automatically_reload_config = true
 
 -- For example, changing the color scheme:
 config.color_scheme = 'Lumifoo (terminal.sexy)'
-config.automatically_reload_config = false
-config.window_background_opacity = .8
+config.window_background_opacity = .9
 -- and finally, return the configuration to wezterm
 return config
