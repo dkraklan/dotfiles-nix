@@ -16,6 +16,7 @@ local plugins = {
 					"python",
 					"markdown",
 					"markdown_inline",
+          "yaml",
 				},
 				highlight = { enable = true },
 				indent = { enabled = false },

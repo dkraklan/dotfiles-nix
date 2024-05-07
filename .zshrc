@@ -15,8 +15,10 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
+if [[ "$(uname)" != "Darwin" ]]; then
+	ZSH_THEME="powerlevel10k/powerlevel10k"
+fi
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -67,7 +69,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -109,4 +111,23 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-alias config='/usr/bin/git --git-dir=/home/dkraklan/.cfg/ --work-tree=/home/dkraklan'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+export PATH="$HOME/.poetry/bin:$PATH"
+
+
+#machine / os specific sections
+if [[ "$(uname)" == "Darwin" ]]; then
+	alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+	alias pathssh="~/.scripts/path_ssh_proxy.sh"
+	alias dirgrep="~/.scripts/dirgrep.sh"
+	alias pathdb="~/.scripts/db_proxy.sh"
+	alias catclip="~/.scripts/catclip.sh"
+	alias sslexpire="~/.scripts/sslexpire.sh"
+	
+	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+	export PATH=/opt/homebrew/bin:$PATH
+	
+	function gam() { "/Users/dkraklan/bin/gam/gam" "$@" ; }
+  
+	source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+fi

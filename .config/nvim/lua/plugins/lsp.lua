@@ -23,9 +23,19 @@ local plugins = {
 				capabilities = capabilities,
 			})
 
+<<<<<<< HEAD
 			lspconfig.gdscript.setup({
 				capabilities = capabilities,
 			})
+=======
+      lspconfig.gdscript.setup({
+        capabilities = capabilities,
+      })
+
+      lspconfig.ansiblels.setup({
+        capabilities = capabilities,
+      })
+>>>>>>> 14f2c7d (mac stuff)
 
 			vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
