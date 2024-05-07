@@ -42,6 +42,7 @@ return {
 			ensure_installed = {
 				-- Update this to ensure that you have the debuggers for the langs you want
 				"delve",
+				"godot",
 			},
 		})
 
@@ -56,8 +57,6 @@ return {
 			{
 				type = "godot",
 				request = "launch",
-        address = "127.0.0.1",
-        debugserver = 6007,
 				name = "Launch Scene",
 				project = "${workspaceFolder}",
 				launch_scene = true,
@@ -96,10 +95,16 @@ return {
 			},
 			layouts = {
 				{
-          -- we leave this table empty to disable scopes, thread / stackframes, watch expressions, breakpoints 
 					elements = {
+						{
+							id = "scopes",
+							size = 0.25,
+						},
+						{ id = "breakpoints", size = 0.25 },
+						{ id = "stacks", size = 0.25 },
+						{ id = "watches", size = 0.25 },
 					},
-					position = "left",
+					position = "right",
 					size = 40,
 				},
 				{
