@@ -5,7 +5,7 @@ local plugins = {
         config = function()
             require("lualine").setup({
                 options = {
-                    theme = "dracula",
+                    theme = "molokai",
                 },
             })
         end,
@@ -15,6 +15,8 @@ local plugins = {
         dependencies = "nvim-tree/nvim-web-devicons",
         opts = {
             options = {
+                indicator = "underline",
+                seperator_style = "slant",
                 -- stylua: ignore
                 close_command = function(n) require("mini.bufremove").delete(n, false) end,
                 -- stylua: ignore

@@ -16,7 +16,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 if [[ "$(uname)" != "Darwin" ]]; then
-	ZSH_THEME="powerlevel10k/powerlevel10k"
+	#ZSH_THEME="powerlevel10k/powerlevel10k"
 fi
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Set list of themes to pick from when loading at random
@@ -129,5 +129,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	
 	function gam() { "/Users/dkraklan/bin/gam/gam" "$@" ; }
   
-	source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+	eval "$(starship init zsh)"
+
+	#source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
 fi
+
