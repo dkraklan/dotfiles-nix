@@ -17,7 +17,10 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 if [[ "$(uname)" != "Darwin" ]]; then
 	#ZSH_THEME="powerlevel10k/powerlevel10k"
+else
+    ZSH_THEME="powerlevel10k/powerlevel10k"
 fi
+
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -132,5 +135,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	eval "$(starship init zsh)"
 
 	#source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+else
+    source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
