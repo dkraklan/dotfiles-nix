@@ -136,6 +136,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
 	#source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
 else
-    source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    #source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    eval "$(starship init zsh)"
 fi
 
