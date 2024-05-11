@@ -1,11 +1,19 @@
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
+local keybinds = require("keybinds")
 
+ 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
-
+config.keys = keybinds.keys
+config.key_tables = keybinds.key_tables
 -- This is where you actually apply your config choices
 config.automatically_reload_config = true
+-- Set default dir when opening new program
+config.default_cwd = "/home/dkraklan"
+
+
+
 
 -- For example, changing the color scheme:
 config.color_scheme = 'Lumifoo (terminal.sexy)'
