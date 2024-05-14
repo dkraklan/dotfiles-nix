@@ -11,6 +11,21 @@ local plugins = {
             })
         end,
     },
+    {
+        "lewis6991/gitsigns.nvim",
+        config = function()
+            require("gitsigns").setup({
+                igns = {
+                    add = { text = "┃" },
+                    change = { text = "┃" },
+                    delete = { text = "_" },
+                    topdelete = { text = "‾" },
+                    changedelete = { text = "~" },
+                    untracked = { text = "┆" },
+                },
+            })
+        end,
+    },
 }
 
 return plugins
