@@ -9,7 +9,7 @@ local plugins = {
         "williamboman/mason-lspconfig.nvim",
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls","ansiblels","ansible-lint" },
+                ensure_installed = { "lua_ls","ansiblels" },
             })
         end,
     },
