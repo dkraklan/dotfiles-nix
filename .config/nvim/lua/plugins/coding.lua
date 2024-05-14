@@ -26,6 +26,7 @@ local plugins = {
             })
         end,
     },
+    { "mfussenegger/nvim-ansible" }
 }
 
 return plugins
