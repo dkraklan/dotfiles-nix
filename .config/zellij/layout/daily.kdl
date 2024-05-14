@@ -8,7 +8,7 @@ layout {
             plugin location="zellij:status-bar"
         }
     }
-    tab name="Civ Simulator" {
+    tab name="Civ Simulator" focus=true {
         pane split_direction="vertical" {
             pane {
                 name "Godot nvim"
@@ -22,6 +22,30 @@ layout {
                 command "./godot.linuxbsd.editor.x86_64"
                 args "-e" "--path" "/home/dkraklan/SynologyDrive/Geek/gamedev/civ_simulator/" "--screen" "2"
             } 
+        }
+    }
+    tab name="Terminal" {
+        pane split_direction="vertical" {
+            pane {
+                name "Terminal1"
+                cwd "/home/dkraklan/"
+            }
+            pane {
+                name "Terminal2"
+                cwd "/home/dkraklan/"
+            }
+        }
+    }
+    tab name="NVIM" {
+        pane split_direction="vertical" {
+            pane {
+                name "Terminal1"
+                cwd "/home/dkraklan/"
+            }
+            pane {
+                name "Terminal2"
+                cwd "/home/dkraklan/"
+            }
         }
     }
 }
