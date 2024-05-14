@@ -9,7 +9,7 @@ local plugins = {
         "williamboman/mason-lspconfig.nvim",
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls" },
+                ensure_installed = { "lua_ls","ansiblels","ansible-lint" },
             })
         end,
     },
@@ -45,6 +45,26 @@ local plugins = {
             lspconfig.ansiblels.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
+                settings = {
+                    ansible = {
+                        ansible = {
+                            path = "ansible",
+                        },
+                        executionEnvironment = {
+                            enabled = false,
+                        },
+                        python = {
+                            interpreterPath = "/user/bin/python3",
+                        },
+                        validation = {
+                            enabled = true,
+                            lint = {
+                                enabled = true,
+                                path = "ansible-lint",
+                            },
+                        },
+                    },
+                },
             })
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
