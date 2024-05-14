@@ -11,7 +11,7 @@ config.key_tables = keybinds.key_tables
 config.automatically_reload_config = true
 -- Set default dir when opening new program
 config.default_cwd = "/home/dkraklan"
-
+config.hide_tab_bar_if_only_one_tab = true
 
 
 
