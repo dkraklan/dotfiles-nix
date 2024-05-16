@@ -18,9 +18,10 @@ local projectfile = vim.fn.getcwd() .. "/project.godot"
 if projectfile then
 	vim.fn.serverstart("./godothost")
 end
+require("lazy").setup("plugins")
 require("options")
 require("mappings")
-require("lazy").setup("plugins")
+require("ansible")
 
 
 
