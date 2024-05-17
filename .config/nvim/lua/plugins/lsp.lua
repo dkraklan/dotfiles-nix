@@ -21,12 +21,12 @@ local plugins = {
             -- inlay hints
             vim.g.inlay_hints_visible = true
             local on_attach = function(client, bufnr)
-                -- if client.server_capabilities.inlayHintProvider then
-                --     vim.g.inlay_hints_visible = true
-                --     vim.lsp.inlay_hint(bufnr, true)
-                -- else
-                --     print("no inlay hints available")
-                -- end
+                if client.server_capabilities.inlayHintProvider then
+                    vim.g.inlay_hints_visible = true
+                    vim.lsp.inlay_hint.enable()
+                else
+                    print("no inlay hints available")
+                end
             end
             -- lua
             lspconfig.lua_ls.setup({
