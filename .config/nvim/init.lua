@@ -15,9 +15,17 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local projectfile = vim.fn.getcwd() .. "/project.godot"
-if projectfile then
-	vim.fn.serverstart("./godothost")
+
+-- Check if the project.godot file exists
+local function file_exists(path)
+    local stat = vim.loop.fs_stat(path)
+    return stat and stat.type == 'file'
 end
+
+if file_exists(projectfile) then
+    vim.fn.serverstart("./godothost")
+end
+
 require("lazy").setup("plugins")
 require("options")
 require("mappings")
