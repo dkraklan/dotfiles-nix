@@ -73,7 +73,6 @@ local function build_ansible_command(check)
     local playbook_name = extract_playbook_name()
     local command_table = {}
     if not playbook_name then
-        print("No playbook found")
         return
     end
     if is_localhost_playbook() then
@@ -93,7 +92,6 @@ local function build_ansible_command(check)
         table.insert(command_table, "--check ")
     end
     local command = table.concat(command_table)
-    print("Command: " .. command)
     return command
 end
 
@@ -106,7 +104,6 @@ function _ansible_toggle()
         close_on_exit = false,
         float_opts = { border = "single" }, -- table: border, width, height, winblend, highlights
         on_open = function(term)
-            print("opened")
             vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
         end,
         on_close = function(term)
