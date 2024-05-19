@@ -9,7 +9,7 @@ local plugins = {
         config = function()
             require("copilot").setup({
                 panel = {
-                    enabled = true,
+                    enabled = false,
                     auto_refresh = false,
                     keymap = {
                         jump_prev = "[[",
@@ -24,7 +24,7 @@ local plugins = {
                     },
                 },
                 suggestion = {
-                    enabled = true,
+                    enabled = false,
                     auto_trigger = true,
                     debounce = 75,
                     keymap = {
