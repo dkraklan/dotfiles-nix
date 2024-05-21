@@ -1,15 +1,31 @@
+local util = require("utils")
+
 local plugins = {
+
+    {
+        "folke/neodev.nvim",
+        opts = {},
+        config = function()
+            require("neodev").setup({
+                -- add any options here, or leave empty to use the default settings
+            })
+        end,
+    },
     {
         "williamboman/mason.nvim",
         config = function()
-            require("mason").setup()
+            require("mason").setup({
+                ensure_installed = {
+                    "gopls",
+                },
+            })
         end,
     },
     {
         "williamboman/mason-lspconfig.nvim",
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls","ansiblels" },
+                ensure_installed = { "lua_ls", "ansiblels", "rust_analyzer", "gopls", "golangci_lint_ls" },
             })
         end,
     },
@@ -38,10 +54,11 @@ local plugins = {
                     },
                 },
             })
+            -- gdscript
             lspconfig.gdscript.setup({
                 capabilities = capabilities,
-                on_attach = on_attach,
-            })
+                on_attach = on_attach, })
+            -- ansible
             lspconfig.ansiblels.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
@@ -66,10 +83,35 @@ local plugins = {
                     },
                 },
             })
+           lspconfig.gopls.setup({
+                on_attach = on_attach,
+                capabilities = capabilities,
+                cmd = { "gopls" },
+                filetypes = { "go", "gomod", "gowork", "gotmpl" },
+                -- root_dir = util.find_project_root(),
+                settings = {
+                    gopls = {
+                        completeUnimported = true,
+                        usePlaceholders = true,
+                        analyses = {
+                            unusedparams = true,
+                        },
+                    },
+                },
+            })
+            lspconfig.golangci_lint_ls.setup({
+                on_attach = on_attach,
+                capabilities = capabilities,
+            })
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
             vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
             vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, { desc = "Go to references" })
+            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
+            -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+            -- vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, { desc = "Show signature help" })
+            -- vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
+            -- vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
         end,
     },
     {
