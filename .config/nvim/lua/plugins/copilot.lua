@@ -24,13 +24,13 @@ local plugins = {
                     },
                 },
                 suggestion = {
-                    enabled = false,
+                    enabled = true,
                     auto_trigger = true,
                     debounce = 75,
                     keymap = {
-                        accept = "<M-l>",
-                        accept_word = false,
-                        accept_line = false,
+                        accept = "<M-k>",
+                        accept_word = "<M-w>",
+                        accept_line = "<M-l>",
                         next = "<M-]>",
                         prev = "<M-[>",
                         dismiss = "<C-]>",
@@ -51,6 +51,9 @@ local plugins = {
                 copilot_node_command = "node", -- Node.js version must be > 18.x
                 server_opts_overrides = {},
             })
+            print("toggling")
+            vim.keymap.set("n", "<leader>ce", require("copilot.suggestion").is_visible(), { desc = "Toggle Copilot suggestion visibility" })
+
         end,
     },
 }
