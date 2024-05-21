@@ -1,3 +1,6 @@
+#Zsh auto complete
+source .oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -31,6 +34,7 @@ else
         zsh-autosuggestions
         zsh-syntax-highlighting
         docker
+	rust
     )
 fi
 
@@ -42,9 +46,7 @@ HISTSIZE=500000
 SAVEHIST=500000
 setopt appendhistory
 setopt INC_APPEND_HISTORY  
-setopt SHARE_HISTORY
-
-#Keybindings
+setopt SHARE_HISTORY #Keybindings
 bindkey '^ ' autosuggest-accept
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -77,5 +79,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
 else
     #source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
     eval "$(starship init zsh)"
+    export GOPATH=~/go
 fi
 
