@@ -105,8 +105,8 @@ style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [rust]
-symbol = ""
-style = "bg:color_blue"
+symbol = '🦀 '
+style = "bg:color_orange"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [golang]
@@ -158,7 +158,7 @@ format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
 disabled = false
 
 [character]
-disabled = true
+disabled = false
 success_symbol = '[](bold fg:color_green)'
 error_symbol = '[](bold fg:color_red)'
 vimcmd_symbol = '[](bold fg:color_green)'
