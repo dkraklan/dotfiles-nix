@@ -30,6 +30,7 @@ require("lazy").setup("plugins")
 require("options")
 require("mappings")
 require("ansible")
+require("go")
 
 
 
