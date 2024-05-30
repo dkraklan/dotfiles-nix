@@ -51,9 +51,8 @@ local plugins = {
                 copilot_node_command = "node", -- Node.js version must be > 18.x
                 server_opts_overrides = {},
             })
-            print("toggling")
-            vim.keymap.set("n", "<leader>ce", require("copilot.suggestion").is_visible(), { desc = "Toggle Copilot suggestion visibility" })
-
+            vim.keymap.set("n", "<leader>ct", '<cmd>lua require("copilot.suggestion").toggle_auto_trigger()<CR>', { desc = "Toggle Copilot suggestion visibility" })
+            vim.keymap.set("n", "<leader>cc", '<cmd>lua require("copilot.panel").open({position,ratio})<CR>', { desc = "Toggle Copilot panel visibility" })
         end,
     },
 }
