@@ -80,5 +80,6 @@ else
     #source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
     eval "$(starship init zsh)"
     export GOPATH=~/go
+    export PATH=$GOPATH/bin:$PATH
 fi
 
