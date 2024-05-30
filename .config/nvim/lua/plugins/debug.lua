@@ -27,6 +27,7 @@ return {
     config = function()
         local dap = require("dap")
         local dapui = require("dapui")
+        require("dap-go").setup({})
 
         require("mason-nvim-dap").setup({
             -- Makes a best effort to setup the various debuggers with
@@ -102,23 +103,27 @@ return {
                     elements = {
                         {
                             id = "console",
-                            size = 0.2,
+                            size = 0.167,
                         },
                         {
                             id = "stacks",
-                            size = 0.2,
+                            size = 0.167,
                         },
                         {
                             id = "watches",
-                            size = 0.2,
+                            size = 0.167,
                         },
                         {
                             id = "scopes",
-                            size = 0.2,
+                            size = 0.167,
                         },
                         {
                             id = "breakpoints",
-                            size = 0.2,
+                            size = 0.167,
+                        },
+                        {
+                            id = "repl",
+                            size = 0.167,
                         },
                     },
                     position = "bottom",
