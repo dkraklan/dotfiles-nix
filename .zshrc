@@ -1,5 +1,9 @@
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+# I set these options on mac to avoid an issue with sourcing
+if [[ "$(uname)" == "Dawin" ]]; then
+    typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+    typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+fi
+
 
 #Zsh auto complete
 source .oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
@@ -18,7 +22,7 @@ else
 fi
 
 
- DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
