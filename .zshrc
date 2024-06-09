@@ -1,3 +1,6 @@
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+
 #Zsh auto complete
 source .oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
@@ -14,7 +17,6 @@ else
     ZSH_THEME="powerlevel10k/powerlevel10k"
 fi
 
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
  DISABLE_AUTO_TITLE="true"
 
