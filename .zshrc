@@ -53,7 +53,7 @@ SAVEHIST=500000
 setopt appendhistory
 setopt INC_APPEND_HISTORY  
 setopt SHARE_HISTORY #Keybindings
-bindkey '^ ' autosuggest-accept
+bindkey '^y' autosuggest-accept
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -87,5 +87,7 @@ else
     eval "$(starship init zsh)"
     export GOPATH=~/go
     export PATH=$GOPATH/bin:$PATH
+    #docker command to show all containers but just the names and status
+    alias dockps="sudo docker ps --format 'table {{.Names}}\t{{.Status}}'"
 fi
 
