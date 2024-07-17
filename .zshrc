@@ -1,5 +1,5 @@
 # I set these options on mac to avoid an issue with sourcing
-if [[ "$(uname)" == "Dawin" ]]; then
+if [[ "$(uname)" == "Darwin" ]]; then
     typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
     typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 fi
