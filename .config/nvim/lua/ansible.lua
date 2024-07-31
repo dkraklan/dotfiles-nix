@@ -115,5 +115,5 @@ function _ansible_toggle()
     _ansible_playbook:toggle()
 end
 
-vim.api.nvim_set_keymap("n", "<leader>rp", "<cmd>lua _ansible_toggle(false)<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<leader>rc", "<cmd>lua _ansible_toggle(true)<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>rp", "<cmd>lua _ansible_toggle(false)<CR>", { desc="Run playbook without check", noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>rc", "<cmd>lua _ansible_toggle(true)<CR>", { desc="Run playbook with check", noremap = true, silent = true })
