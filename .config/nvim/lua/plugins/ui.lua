@@ -27,10 +27,10 @@ local plugins = {
                     lualine_b = { "branch", "diff", "diagnostics" },
                     lualine_c = {
                         {
-                            'filename',
-                            file_status = true,     -- Displays file status (readonly status, modified status)
+                            "filename",
+                            file_status = true, -- Displays file status (readonly status, modified status)
                             newfile_status = false, -- Display new file status (new file means no write after created)
-                            path = 4,               -- 0: Just the filename
+                            path = 4, -- 0: Just the filename
                             -- 1: Relaitive path
                             -- 2: Absolute path
                             -- 3: Absolute path, with tilde as the home directory
@@ -39,12 +39,12 @@ local plugins = {
                             shorting_target = 40, -- Shortens path to leave 40 spaces in the window
                             -- for other components. (terrible name, any suggestions?)
                             symbols = {
-                                modified = '[+]',      -- Text to show when the file is modified.
-                                readonly = '[-]',      -- Text to show when the file is non-modifiable or readonly.
-                                unnamed = '[No Name]', -- Text to show for unnamed buffers.
-                                newfile = '[New]',     -- Text to show for newly created file before first write
-                            }
-                        }
+                                modified = "[+]", -- Text to show when the file is modified.
+                                readonly = "[-]", -- Text to show when the file is non-modifiable or readonly.
+                                unnamed = "[No Name]", -- Text to show for unnamed buffers.
+                                newfile = "[New]", -- Text to show for newly created file before first write
+                            },
+                        },
                     },
                     lualine_x = { "copilot", "encoding", "fileformat", "filetype" },
                     lualine_y = { "progress" },
@@ -55,10 +55,10 @@ local plugins = {
                     lualine_b = {},
                     lualine_c = {
                         {
-                            'filename',
-                            file_status = true,     -- Displays file status (readonly status, modified status)
+                            "filename",
+                            file_status = true, -- Displays file status (readonly status, modified status)
                             newfile_status = false, -- Display new file status (new file means no write after created)
-                            path = 4,               -- 0: Just the filename
+                            path = 4, -- 0: Just the filename
                             -- 1: Relaitive path
                             -- 2: Absolute path
                             -- 3: Absolute path, with tilde as the home directory
@@ -67,12 +67,12 @@ local plugins = {
                             shorting_target = 40, -- Shortens path to leave 40 spaces in the window
                             -- for other components. (terrible name, any suggestions?)
                             symbols = {
-                                modified = '[+]',      -- Text to show when the file is modified.
-                                readonly = '[-]',      -- Text to show when the file is non-modifiable or readonly.
-                                unnamed = '[No Name]', -- Text to show for unnamed buffers.
-                                newfile = '[New]',     -- Text to show for newly created file before first write
-                            }
-                        }
+                                modified = "[+]", -- Text to show when the file is modified.
+                                readonly = "[-]", -- Text to show when the file is non-modifiable or readonly.
+                                unnamed = "[No Name]", -- Text to show for unnamed buffers.
+                                newfile = "[New]", -- Text to show for newly created file before first write
+                            },
+                        },
                     },
                     lualine_x = { "location" },
                     lualine_y = {},
@@ -128,13 +128,56 @@ local plugins = {
     },
     {
         "nvimdev/dashboard-nvim",
-        event = "VimEnter",
-        config = function()
-            require("dashboard").setup({
-                -- config
-            })
+        lazy = false, -- As https://github.com/nvimdev/dashboard-nvim/pull/450, dashboard-nvim shouldn't be lazy-loaded to properly handle stdin.
+        opts = function()
+            local logo = [[
+           ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
+           ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z
+           ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z
+           ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z
+           ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║
+           ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
+      ]]
+
+            logo = string.rep("\n", 8) .. logo .. "\n\n"
+
+            -- local opts = {
+            --     theme = "doom",
+            --     hide = {
+            --         -- this is taken care of by lualine
+            --         -- enabling this messes up the actual laststatus setting after loading a file
+            --         statusline = false,
+            --     },
+            --     config = {
+            --         center = {
+            --             {
+            --                 icon = "",
+            --                 icon_hl = "group",
+            --                 desc = "description",
+            --                 desc_hl = "group",
+            --                 key = "shortcut key in dashboard buffer not keymap !!",
+            --                 key_hl = "group",
+            --                 key_format = " [%s]", -- `%s` will be substituted with value of `key`
+            --                 action = "",
+            --             },
+            --         },
+            --         footer = {},
+            --     },
+            -- }
+
+            -- close Lazy and re-open when the dashboard is ready
+            -- if vim.o.filetype == "lazy" then
+            --     vim.cmd.close()
+            --     vim.api.nvim_create_autocmd("User", {
+            --         pattern = "DashboardLoaded",
+            --         callback = function()
+            --             require("lazy").show()
+            --         end,
+            --     })
+            -- end
+
+            -- return opts
         end,
-        dependencies = { { "nvim-tree/nvim-web-devicons" } },
     },
     {
         "rcarriga/nvim-notify",
