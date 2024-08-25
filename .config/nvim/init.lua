@@ -1,7 +1,9 @@
-vim.g.mapleader = " "
-
+local utils = require("utils")
 -- Lazy load lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+vim.g.mapleader = " "
+
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
@@ -17,12 +19,9 @@ vim.opt.rtp:prepend(lazypath)
 local projectfile = vim.fn.getcwd() .. "/project.godot"
 
 -- Check if the project.godot file exists
-local function file_exists(path)
-    local stat = vim.loop.fs_stat(path)
-    return stat and stat.type == 'file'
-end
 
-if file_exists(projectfile) then
+
+if utils.file_exists(projectfile) then
     vim.fn.serverstart("./godothost")
 end
 
@@ -32,6 +31,14 @@ require("mappings")
 require("ansible")
 require("go")
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "json",
+    callback = function(ev)
+        -- vim.bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
+        vim.bo[ev.buf].formatprg = "jq"
+        print("It's a json file")
+    end,
+})
 
 
 vim.cmd.colorscheme("catppuccin")
