@@ -25,7 +25,7 @@ local plugins = {
         "williamboman/mason-lspconfig.nvim",
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "ansiblels", "rust_analyzer", "gopls", "golangci_lint_ls" },
+                ensure_installed = { "lua_ls", "ansiblels", "rust_analyzer", "gopls", "golangci_lint_ls","jsonls" },
             })
         end,
     },
@@ -57,7 +57,8 @@ local plugins = {
             -- gdscript
             lspconfig.gdscript.setup({
                 capabilities = capabilities,
-                on_attach = on_attach, })
+                on_attach = on_attach,
+            })
             -- ansible
             lspconfig.ansiblels.setup({
                 capabilities = capabilities,
@@ -83,7 +84,7 @@ local plugins = {
                     },
                 },
             })
-           lspconfig.gopls.setup({
+            lspconfig.gopls.setup({
                 on_attach = on_attach,
                 capabilities = capabilities,
                 cmd = { "gopls" },
@@ -103,6 +104,7 @@ local plugins = {
                 on_attach = on_attach,
                 capabilities = capabilities,
             })
+            require'lspconfig'.jsonls.setup{}
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
             vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
@@ -127,6 +129,10 @@ local plugins = {
             vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })
         end,
     },
+    -- {
+    --     "stevearc/conform.nvim",
+    --     opts = {},
+    -- },
 }
 
 return plugins
