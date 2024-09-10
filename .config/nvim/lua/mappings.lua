@@ -31,9 +31,9 @@ map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window W
 map("n", "ge", vim.diagnostic.open_float, { desc = "Show diagnostics in floating window" })
 
 -- Rest.nvim
-vim.keymap.set("n", "<leader>rr", "<cmd>Rest run<CR>", { desc = "Run rest command" })
+vim.keymap.set("n", "<leader>rr", "<cmd>tab Rest run<CR>", { desc = "Run rest command" })
 vim.keymap.set("n", "<leader>rl", "<cmd>Rest run last<CR>", { desc = "Run last rest command" })
-vim.keymap.set("n", "<leader>ro", "<cmd>hori Rest open<CR>", { desc = "Open rest results window" })
+vim.keymap.set("n", "<leader>ro", "<cmd>vert Rest open<CR>", { desc = "Open rest results window" })
 
 -- open a floating terminal
 local _floating_term = Terminal:new({
