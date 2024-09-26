@@ -17,6 +17,7 @@ local plugins = {
             require("mason").setup({
                 ensure_installed = {
                     "gopls",
+                    "docker-compose-language-service"
                 },
             })
         end,
@@ -25,7 +26,16 @@ local plugins = {
         "williamboman/mason-lspconfig.nvim",
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "ansiblels", "rust_analyzer", "gopls", "golangci_lint_ls","jsonls" },
+                ensure_installed = {
+                    "lua_ls",
+                    "ansiblels",
+                    "rust_analyzer",
+                    "gopls",
+                    "golangci_lint_ls",
+                    "jsonls",
+                    "pyright",
+                    "docker_compose_language_service",
+                },
             })
         end,
     },
@@ -54,11 +64,13 @@ local plugins = {
                     },
                 },
             })
+
             -- gdscript
             lspconfig.gdscript.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             -- ansible
             lspconfig.ansiblels.setup({
                 capabilities = capabilities,
@@ -84,6 +96,8 @@ local plugins = {
                     },
                 },
             })
+
+            --- Golang
             lspconfig.gopls.setup({
                 on_attach = on_attach,
                 capabilities = capabilities,
@@ -100,11 +114,22 @@ local plugins = {
                     },
                 },
             })
+
+            --- Golang lint
             lspconfig.golangci_lint_ls.setup({
                 on_attach = on_attach,
                 capabilities = capabilities,
             })
-            require'lspconfig'.jsonls.setup{}
+
+            --- Python
+            require("lspconfig").pyright.setup({})
+
+            --- Json
+            require("lspconfig").jsonls.setup({})
+
+            -- Docker compose
+            require'lspconfig'.docker_compose_language_service.setup{}
+
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
             vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
@@ -124,6 +149,7 @@ local plugins = {
                 sources = {
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.gdformat,
+                    null_ls.builtins.formatting.black,
                 },
             })
             vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })
