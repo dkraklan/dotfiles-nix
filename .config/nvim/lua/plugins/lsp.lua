@@ -17,7 +17,12 @@ local plugins = {
             require("mason").setup({
                 ensure_installed = {
                     "gopls",
-                    "docker-compose-language-service"
+                    "docker-compose-language-service",
+                    "isort",
+                    "djlint",
+                    "isort",
+                    "black",
+
                 },
             })
         end,
@@ -35,6 +40,7 @@ local plugins = {
                     "jsonls",
                     "pyright",
                     "docker_compose_language_service",
+                    "jinja_lsp",
                 },
             })
         end,
@@ -128,7 +134,10 @@ local plugins = {
             require("lspconfig").jsonls.setup({})
 
             -- Docker compose
-            require'lspconfig'.docker_compose_language_service.setup{}
+            require("lspconfig").docker_compose_language_service.setup({})
+            
+            -- Jinja
+            require("lspconfig").jinja_lsp.setup({})
 
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
@@ -150,6 +159,8 @@ local plugins = {
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.gdformat,
                     null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.isort,
+                       null_ls.builtins.formatting.djlint, 
                 },
             })
             vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })

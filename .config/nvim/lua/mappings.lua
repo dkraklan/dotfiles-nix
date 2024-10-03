@@ -2,7 +2,7 @@
 local map = vim.keymap.set
 local Terminal = require("toggleterm.terminal").Terminal
 local utils = require("utils")
-
+local telescope = require("telescope.builtin")
 
 map("n", "<leader>w", ":w!<cr>", { desc = "Write Force" })
 map("n", "<leader>q", ":q!<cr>", { desc = "Quit force" })
@@ -30,10 +30,15 @@ map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Wi
 map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 map("n", "ge", vim.diagnostic.open_float, { desc = "Show diagnostics in floating window" })
 
+-- telescope
+map("n", "<leader><leader>", telescope.find_files, { desc = 'Telescope find files'})
+map("n", "<leader>fg", telescope.live_grep, { desc = 'Telescope live grep'})
+map('n', '<leader>fb', telescope.buffers, { desc = 'Telescope buffers' })
+
 -- Rest.nvim
-vim.keymap.set("n", "<leader>rr", "<cmd>tab Rest run<CR>", { desc = "Run rest command" })
-vim.keymap.set("n", "<leader>rl", "<cmd>Rest run last<CR>", { desc = "Run last rest command" })
-vim.keymap.set("n", "<leader>ro", "<cmd>vert Rest open<CR>", { desc = "Open rest results window" })
+map("n", "<leader>rr", "<cmd>tab Rest run<CR>", { desc = "Run rest command" })
+map("n", "<leader>rl", "<cmd>Rest run last<CR>", { desc = "Run last rest command" })
+map("n", "<leader>ro", "<cmd>vert Rest open<CR>", { desc = "Open rest results window" })
 
 -- open a floating terminal
 local _floating_term = Terminal:new({
@@ -51,4 +56,4 @@ local _floating_term = Terminal:new({
     auto_scroll = true, -- if true, the terminal will scroll on new output
 })
 
-vim.keymap.set("n", "<leader>tt", function() _floating_term:toggle() end, { desc = "Open floating terminal" })
+map("n", "<leader>tt", function() _floating_term:toggle() end, { desc = "Open floating terminal" })
