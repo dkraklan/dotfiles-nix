@@ -57,19 +57,42 @@ local function is_localhost_playbook()
     return false
 end
 
-local function is_poetry_env()
+local function is_venv()
     local project_root = utils.find_project_root()
     local pyproject_toml = project_root .. "/pyproject.toml"
+    local pipfile = project_root .. "/Pipfile"
+
     if utils.file_exists(pyproject_toml) then
-        return true
+        return "poetry run "
     end
-    return false
+    if utils.file_exists(pipfile) then
+        return "pipenv run "
+    end
+    return ""
+end
+
+local function inventory_file_name()
+    local project_root = utils.find_project_root()
+    if not project_root then
+        -- Handle the case where project_root is not found
+        return "inventory"
+    end
+
+    local lab_filename = project_root .. "/lab"
+    local production_filename = project_root .. "/production"
+
+    if utils.file_exists(production_filename) then
+        return "production"
+    elseif utils.file_exists(lab_filename) then
+        return "lab"
+    else
+        return "inventory"
+    end
 end
 
 
 local function build_ansible_command(check)
-    local project_root = utils.find_project_root() -- Get the root directory of the projectfile
-    local inventory_file = "lab"
+    local inventory_file = inventory_file_name()
     local playbook_name = extract_playbook_name()
     local command_table = {}
     if not playbook_name then
@@ -78,11 +101,12 @@ local function build_ansible_command(check)
     if is_localhost_playbook() then
         table.insert(command_table, "ANSIBLE_CONFIG=ansible_localhost.cfg ")
     end
-    if is_poetry_env() then
-        table.insert(command_table, "poetry run ansible-playbook ")
-    else
-        table.insert(command_table, "ansible-playbook ")
-    end
+    -- if is_venv() then
+    --     table.insert(command_table, "poetry run ansible-playbook ")
+    -- else
+    --     table.insert(command_table, "ansible-playbook ")
+    -- end
+    table.insert(command_table, is_venv() .. "ansible-playbook ")
     table.insert(command_table, playbook_name .. " ")
     table.insert(command_table, "-i ")
     table.insert(command_table, inventory_file .. " ")
@@ -92,12 +116,13 @@ local function build_ansible_command(check)
         table.insert(command_table, "--check ")
     end
     local command = table.concat(command_table)
+    print("Ansible Command", command)
     return command
 end
 
-function _ansible_toggle()
+function Ansible_Toggle(check)
     local _ansible_playbook = Terminal:new({
-        cmd = build_ansible_command(), -- the command to running
+        cmd = build_ansible_command(check), -- the command to running
         dir = utils.find_project_root(), -- the working directory
         direction = "float",     -- the direction, can be: 'vertical', 'horizontal', 'window', 'float'
         hidden = false,
@@ -106,7 +131,7 @@ function _ansible_toggle()
         on_open = function(term)
             vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
         end,
-        on_close = function(term)
+        on_close = function()
             vim.cmd("redraw!")
         end,
         auto_scroll = true, -- if true, the terminal will scroll on new output
@@ -115,5 +140,5 @@ function _ansible_toggle()
     _ansible_playbook:toggle()
 end
 
-vim.api.nvim_set_keymap("n", "<leader>rp", "<cmd>lua _ansible_toggle(false)<CR>", { desc="Run playbook without check", noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<leader>rc", "<cmd>lua _ansible_toggle(true)<CR>", { desc="Run playbook with check", noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>rp", "<cmd>lua Ansible_Toggle(false)<CR>", { desc="Run playbook without check", noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>rc", "<cmd>lua Ansible_Toggle(true)<CR>", { desc="Run playbook with check", noremap = true, silent = true })
