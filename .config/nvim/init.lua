@@ -30,6 +30,7 @@ require("options")
 require("mappings")
 require("ansible")
 require("go")
+require("docker")
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "json",
@@ -39,6 +40,8 @@ vim.api.nvim_create_autocmd("FileType", {
         print("It's a json file")
     end,
 })
+
+
 
 
 vim.cmd.colorscheme("catppuccin")

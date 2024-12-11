@@ -22,7 +22,8 @@ local plugins = {
                     "djlint",
                     "isort",
                     "black",
-
+                    "eslint",
+                    "prettier",
                 },
             })
         end,
@@ -41,6 +42,8 @@ local plugins = {
                     "pyright",
                     "docker_compose_language_service",
                     "jinja_lsp",
+                    "volar",
+                    "tsserver",
                 },
             })
         end,
@@ -135,10 +138,40 @@ local plugins = {
 
             -- Docker compose
             require("lspconfig").docker_compose_language_service.setup({})
-            
+
             -- Jinja
             require("lspconfig").jinja_lsp.setup({})
-
+            -- vue and tsserver
+            -- TypeScript (tsserver)
+            -- lspconfig.tsserver.setup({
+            --     root_dir = lspconfig.util.root_pattern("tsconfig.app.json", ".git"),
+            -- })
+            --
+            -- Vue 3 + TypeScript (Volar)
+            require("lspconfig").volar.setup({
+                filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+                init_options = {
+                    vue = {
+                        hybridMode = false,
+                    },
+                    typescript = {
+                           --   This is deff only going to work for the project i'm currently working on since my frontend is in a subfolder
+                           --   Should fix this in the future
+                           --   TODO fix this shit
+                        tsdk = vim.fn.getcwd() .. "/frontend/node_modules/typescript/lib",
+                    },
+                },
+            }) 
+            -- lspconfig.eslint.setup({
+            --     --- ...
+            --     on_attach = function(client, bufnr)
+            --         vim.api.nvim_create_autocmd("BufWritePre", {
+            --             buffer = bufnr,
+            --             command = "EslintFixAll",
+            --         })
+            --     end,
+            -- })
+            --
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
             vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
@@ -154,14 +187,23 @@ local plugins = {
         "nvimtools/none-ls.nvim",
         config = function()
             local null_ls = require("null-ls")
+
             null_ls.setup({
                 sources = {
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.gdformat,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.isort,
-                       null_ls.builtins.formatting.djlint, 
+                    null_ls.builtins.formatting.djlint,
+                    -- null_ls.builtins.formatting.prettier,
                 },
+                -- This function will prevent null-ls from attaching to vue files
+                on_attach = function(client, bufnr)
+                    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+                    if filetype == "vue" then
+                        client.stop() -- Stop null-ls from attaching to Vue files
+                    end
+                end,
             })
             vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })
         end,
