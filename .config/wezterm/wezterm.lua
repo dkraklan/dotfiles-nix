@@ -1,7 +1,6 @@
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
 local keybinds = require("keybinds")
-
  
 -- This will hold the configuration.
 local config = wezterm.config_builder()
@@ -14,9 +13,13 @@ config.default_cwd = "/home/dkraklan"
 config.hide_tab_bar_if_only_one_tab = true
 
 
-
 -- For example, changing the color scheme:
 config.color_scheme = 'Lumifoo (terminal.sexy)'
 config.window_background_opacity = .9
 -- and finally, return the configuration to wezterm
+local bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
+bar.apply_to_config(config)
+--
 return config
+
+

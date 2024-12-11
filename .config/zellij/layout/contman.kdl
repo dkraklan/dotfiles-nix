@@ -14,17 +14,17 @@ layout {
                 name "NVIM"
                 cwd "/home/dkraklan/projects/go/contman"
             }
-            pane split_direction="horizontal" {
-                pane { 
-                    name "HTTP"
-                    cwd "/home/dkraklan/projects/go/contman"
-                }
-                pane command="sudo"{ 
-                    args "docker" "compose" "up" "--build"
-                    name "Docker Logs"
-                    cwd "/home/dkraklan/projects/go/contman"
-                }
-            }
+        //     pane split_direction="horizontal" {
+        //         pane { 
+        //             name "HTTP"
+        //             cwd "/home/dkraklan/projects/go/contman"
+        //         }
+        //         pane command="sudo"{ 
+        //             args "docker" "compose" "up" "--build"
+        //             name "Docker Logs"
+        //             cwd "/home/dkraklan/projects/go/contman"
+        //         }
+        //     }
         }
     }
     tab name="Terminal" {
