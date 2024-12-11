@@ -8,13 +8,11 @@ function M.find_project_root()
     while root_dir and root_dir ~= "/" do
         for _, marker in ipairs(root_markers) do
             if vim.fn.glob(root_dir .. "/" .. marker) ~= "" then
-                print("Root directory: " .. root_dir)
                 return root_dir
             end
         end
         root_dir = vim.fn.fnamemodify(root_dir, ":h")
     end
-    print("CWD: " .. cwd)
     return root_dir -- Fallback to the current working directory
 end
 
