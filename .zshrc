@@ -5,8 +5,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 
-#Zsh auto complete
-source .oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -16,8 +14,14 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 
 if [[ "$(uname)" != "Darwin" ]]; then
-	#ZSH_THEME="powerlevel10k/powerlevel10k"
+    # Linux config
+    source .oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
 else
+    #Macos config
+    source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+    source $(brew --prefix zsh-autosuggestions)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     ZSH_THEME="powerlevel10k/powerlevel10k"
 fi
 
@@ -32,7 +36,12 @@ HIST_STAMPS="mm/dd/yyyy"
 
  # For now we run seperate plugins on mac / linx so we differenate here
 if [[ "$(uname)" == "Darwin" ]]; then
-    plugins=(git poetry-env zsh-autosuggestions)
+    plugins=(
+        git
+        docker
+        # poetry-env
+        # zsh-autosuggestions
+    )
 else
     plugins=(
         git
@@ -40,7 +49,7 @@ else
         zsh-autosuggestions
         zsh-syntax-highlighting
         docker
-	rust
+    	rust
     )
 fi
 
