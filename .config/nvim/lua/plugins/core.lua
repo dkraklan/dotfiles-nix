@@ -122,6 +122,8 @@ local plugins = {
         config = function(_, opts)
             vim.keymap.set("n", "<leader>e", ":Neotree focus<cr>", { desc = "Focus neotree" })
             vim.keymap.set("n", "<C-e>", ":Neotree toggle<cr>", { desc = "Toggle Neotree" })
+            -- floating neotree window
+            vim.keymap.set("n", "<leader>fe", ":Neotree position=float<cr>", { desc = "Open Neotree" })
             require("neo-tree").setup(opts)
         end,
     },
