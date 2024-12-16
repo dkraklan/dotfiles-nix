@@ -6,7 +6,8 @@ local plugins = {
 		opts = {},
 		config = function()
 			require("catppuccin").setup({
-				transparent_background = true,
+				transparent_background = false,
+                flavor = "frappe",
 				integrations = {
 					cmp = true,
 					dashboard = true,

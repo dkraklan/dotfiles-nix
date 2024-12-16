@@ -59,7 +59,7 @@ inner.horizontal = 40
 inner.vertical =   40
 outer.left =       20
 outer.bottom =     20
-outer.top =        40
+outer.top =        [{ monitor.main = 30 },70]
 outer.right =      20
 
 

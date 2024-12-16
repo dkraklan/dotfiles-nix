@@ -82,7 +82,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	alias pathdb="~/.scripts/db_proxy.sh"
 	alias catclip="~/.scripts/catclip.sh"
 	alias sslexpire="~/.scripts/sslexpire.sh"
-	
+	alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 	export PATH=/opt/homebrew/bin:$PATH
 	
