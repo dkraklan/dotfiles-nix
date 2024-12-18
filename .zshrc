@@ -22,6 +22,7 @@ else
     source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
     source $(brew --prefix zsh-autosuggestions)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    eval "$(zoxide init zsh)"
     ZSH_THEME="powerlevel10k/powerlevel10k"
 fi
 
