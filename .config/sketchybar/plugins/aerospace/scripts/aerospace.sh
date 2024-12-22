@@ -17,6 +17,7 @@ get_icon_for_app() {
         "Signal") icon="󰭹" ;;
         "Obsidian") icon="󱞁" ;;
         "Spotify") icon="" ;;
+        "Emacs") icon="" ;;
         *) icon="" ;;
     esac
     echo $icon
