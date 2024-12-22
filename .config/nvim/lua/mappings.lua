@@ -40,6 +40,12 @@ map("n", "<leader>rr", "<cmd>tab Rest run<CR>", { desc = "Run rest command" })
 map("n", "<leader>rl", "<cmd>Rest run last<CR>", { desc = "Run last rest command" })
 map("n", "<leader>ro", "<cmd>vert Rest open<CR>", { desc = "Open rest results window" })
 
+
+-- Notes
+map("n", "<leader>ns", "<cmd>ObsidianQuickSwitch<CR>", { desc = "Quick switch notes" })
+map("n", "<leader>nf", "<cmd>ObsidianSearch<CR>", { desc = "Full text search notes" })
+map("n", "<leader>nt", "<cmd>ObsidianToggleCheckbox<CR>", { desc = "Toggle Checkbox" })
+
 -- open a floating terminal
 local _floating_term = Terminal:new({
     dir = utils.find_project_root(), -- the working directory

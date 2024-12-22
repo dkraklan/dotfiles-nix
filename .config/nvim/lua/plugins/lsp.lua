@@ -24,6 +24,8 @@ local plugins = {
                     "black",
                     "eslint",
                     "prettier",
+                    "shellcheck",
+                    "shellharden"
                 },
             })
         end,
@@ -44,6 +46,7 @@ local plugins = {
                     "jinja_lsp",
                     "volar",
                     "tsserver",
+                    "bashls",
                 },
             })
         end,
@@ -141,37 +144,10 @@ local plugins = {
 
             -- Jinja
             require("lspconfig").jinja_lsp.setup({})
-            -- vue and tsserver
-            -- TypeScript (tsserver)
-            -- lspconfig.tsserver.setup({
-            --     root_dir = lspconfig.util.root_pattern("tsconfig.app.json", ".git"),
-            -- })
-            --
-            -- Vue 3 + TypeScript (Volar)
-            require("lspconfig").volar.setup({
-                filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" },
-                init_options = {
-                    vue = {
-                        hybridMode = false,
-                    },
-                    typescript = {
-                           --   This is deff only going to work for the project i'm currently working on since my frontend is in a subfolder
-                           --   Should fix this in the future
-                           --   TODO fix this shit
-                        tsdk = vim.fn.getcwd() .. "/frontend/node_modules/typescript/lib",
-                    },
-                },
-            }) 
-            -- lspconfig.eslint.setup({
-            --     --- ...
-            --     on_attach = function(client, bufnr)
-            --         vim.api.nvim_create_autocmd("BufWritePre", {
-            --             buffer = bufnr,
-            --             command = "EslintFixAll",
-            --         })
-            --     end,
-            -- })
-            --
+
+            -- Bash
+            require("lspconfig").bashls.setup({})
+
             vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
             vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
