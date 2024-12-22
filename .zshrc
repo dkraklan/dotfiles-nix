@@ -86,7 +86,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 	export PATH=/opt/homebrew/bin:$PATH
-	
+	alias python=python3
+
 	function gam() { "/Users/dkraklan/bin/gam/gam" "$@" ; }
   
 	eval "$(starship init zsh)"
@@ -99,5 +100,11 @@ else
     export PATH=$GOPATH/bin:$PATH
     #docker command to show all containers but just the names and status
     alias dockps="sudo docker ps --format 'table {{.Names}}\t{{.Status}}'"
+fi
+
+
+#check if ~/.emacs.d/ exists and if so, add it to the pathdb
+if [ -d "$HOME/.emacs.d" ]; then
+    export PATH="$HOME/.emacs.d/bin:$PATH"
 fi
 
