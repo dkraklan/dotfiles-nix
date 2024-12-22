@@ -40,7 +40,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
-automatically-unhide-macos-hidden-apps = false
+automatically-unhide-macos-hidden-apps = true
 
 # Possible values: (qwerty|dvorak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
@@ -71,19 +71,27 @@ outer.right =      20
 5 = 'secondary' #Secondary Browser
 6 = 'primary' #Obsidian
 
-
+#Map signal
 [[on-window-detected]]
 if.app-id = 'org.whispersystems.signal-desktop'
 run = 'move-node-to-workspace 2'
 
+# Map slack
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = 'move-node-to-workspace 2'
 
+# Map iterm2  
 [[on-window-detected]]
 if.app-id = 'com.googlecode.iterm2'
 run = 'move-node-to-workspace 3'
 
+#Map Emacs
+[[on-window-detected]]
+if.app-id ='org.gnu.Emacs'
+run = 'move-node-to-workspace 3'
+
+#Map obsidian to correct space
 [[on-window-detected]]
 if.app-id = 'md.obsidian'
 run = 'move-node-to-workspace 6'
@@ -129,10 +137,11 @@ cmd-shift-k = 'focus up'
 cmd-shift-l = 'focus right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
+# Commented these out as they conflict with some emacs keybindings
+cmd-alt-h = 'move left'
+cmd-alt-j = 'move down'
+cmd-alt-k = 'move up'
+cmd-alt-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 alt-shift-minus = 'resize smart -50'
