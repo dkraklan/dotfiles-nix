@@ -68,7 +68,6 @@ bindkey '^y' autosuggest-accept
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-export PATH="$HOME/.poetry/bin:$PATH"
 
 if command -v fastfetch &> /dev/null 
  then
