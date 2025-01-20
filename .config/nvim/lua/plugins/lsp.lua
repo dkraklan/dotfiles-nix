@@ -2,6 +2,7 @@ local util = require("utils")
 
 local plugins = {
 
+
     {
         "folke/neodev.nvim",
         opts = {},
@@ -166,10 +167,13 @@ local plugins = {
 
             null_ls.setup({
                 sources = {
-                    null_ls.builtins.formatting.stylua,
+                    -- I have these commented out becuase of a super annoying issue with none-LS at the moment
+                    -- https://github.com/nvimtools/none-ls.nvim/issues/241
+                    -- null_ls.builtins.formatting.stylua,
+                    --
                     null_ls.builtins.formatting.gdformat,
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.isort,
+                    -- null_ls.builtins.formatting.black,
+                    -- null_ls.builtins.formatting.isort,
                     null_ls.builtins.formatting.djlint,
                     -- null_ls.builtins.formatting.prettier,
                 },
@@ -181,6 +185,7 @@ local plugins = {
                     end
                 end,
             })
+
             vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })
         end,
     },

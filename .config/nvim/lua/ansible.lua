@@ -8,8 +8,11 @@ local function extract_playbook_name()
     -- Check if the current buffer tells us the playbook name
     for _, line in ipairs(lines) do
         local match = line:match("# @playbook: (.+%.yml)")
+        local match1 = line:match("# @playbook (.+%.yml)")
         if match then
             return match
+        elseif match1 then
+            return match1
         end
     end
     local cwd = vim.fn.getcwd() -- Get the directory of the current buffers
@@ -80,11 +83,14 @@ local function inventory_file_name()
 
     local lab_filename = project_root .. "/lab"
     local production_filename = project_root .. "/production"
+    local inventory_yml = project_root .. "/inventory.yml"
 
     if utils.file_exists(production_filename) then
         return "production"
     elseif utils.file_exists(lab_filename) then
         return "lab"
+    elseif utils.file_exists(inventory_yml) then
+        return "inventory.yml"
     else
         return "inventory"
     end
@@ -121,6 +127,7 @@ local function build_ansible_command(check)
 end
 
 function Ansible_Toggle(check)
+    -- TODO: should convert this to be a taskrunner using overseer in the future
     local _ansible_playbook = Terminal:new({
         cmd = build_ansible_command(check), -- the command to running
         dir = utils.find_project_root(), -- the working directory
