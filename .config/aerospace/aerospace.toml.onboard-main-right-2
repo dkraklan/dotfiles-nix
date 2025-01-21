@@ -59,17 +59,17 @@ inner.horizontal = 40
 inner.vertical =   40
 outer.left =       20
 outer.bottom =     20
-outer.top =        [{ monitor.secondary = 30 },70]
+outer.top =        [{ monitor.main = 30 },70]
 outer.right =      20
 
 
 [workspace-to-monitor-force-assignment]
 1 = 'main' #Primary Browser
 2 = 'secondary' #Chat
-3 = 'main' #Terminal
-4 = 'secondary' # Spotify
+3 = 'secondary' #Terminal
+4 = 'primary' # Spotify
 5 = 'secondary' #Secondary Browser
-6 = 'secondary' #Obsidian
+6 = 'primary' #Obsidian
 
 #Map signal
 [[on-window-detected]]
