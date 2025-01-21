@@ -5,7 +5,7 @@ vim.cmd("set shiftwidth=4")
 vim.cmd("set number relativenumber")
 vim.cmd("set nu rnu")
 vim.cmd("set clipboard=unnamed")
-
+vim.lsp.inlay_hint.enable()
 
 
 vim.filetype.add {
