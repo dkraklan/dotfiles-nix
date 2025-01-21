@@ -31,6 +31,7 @@ require("mappings")
 require("ansible")
 require("go")
 require("docker")
+require("rust")
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "json",
