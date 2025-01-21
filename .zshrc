@@ -69,8 +69,8 @@ bindkey '^y' autosuggest-accept
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
-if command -v fastfetch &> /dev/null 
- then
+if command -v fastfetch &> /dev/null && [ -z "$SKIP_FASTFETCH" ]
+then
     fastfetch
 fi
 
@@ -83,6 +83,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	alias catclip="~/.scripts/catclip.sh"
 	alias sslexpire="~/.scripts/sslexpire.sh"
 	alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+    alias tl="/Users/dkraklan/.config/scripts/tmux_launch.sh"
 	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 	export PATH=/opt/homebrew/bin:$PATH
 	alias python=python3
