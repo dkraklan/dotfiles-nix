@@ -44,9 +44,9 @@ local plugins = {
                     "jsonls",
                     "pyright",
                     "docker_compose_language_service",
-                    "jinja_lsp",
+                    -- "jinja_lsp",
                     "volar",
-                    "tsserver",
+                    -- "tsserver",
                     "bashls",
                 },
             })
@@ -134,31 +134,23 @@ local plugins = {
                 capabilities = capabilities,
             })
 
+
             --- Python
-            require("lspconfig").pyright.setup({})
+            lspconfig.pyright.setup({})
 
             --- Json
-            require("lspconfig").jsonls.setup({})
+            lspconfig.jsonls.setup({})
 
             -- Docker compose
-            require("lspconfig").docker_compose_language_service.setup({})
+            lspconfig.docker_compose_language_service.setup({})
 
             -- Jinja
-            require("lspconfig").jinja_lsp.setup({})
+            lspconfig.jinja_lsp.setup({})
 
             -- Bash
-            require("lspconfig").bashls.setup({})
+            lspconfig.bashls.setup({})
 
-            vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-            vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
-            vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, { desc = "Go to references" })
-            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
-            -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-            -- vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, { desc = "Show signature help" })
-            -- vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
-            -- vim.keymap.set("n", "gh", vim.lsp.buf.hover, { desc = "Show tooltip hint" })
-        end,
+                    end,
     },
     {
         "nvimtools/none-ls.nvim",
@@ -185,9 +177,7 @@ local plugins = {
                     end
                 end,
             })
-
-            vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })
-        end,
+       end,
     },
     -- {
     --     "stevearc/conform.nvim",
