@@ -40,13 +40,15 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/SynologyDrive/Documents/org/org/org-basics.org")
 
 (require 'projectile)
 (projectile-mode +1)
 
 (setq
  projectile-project-search-path '("~/SynologyDrive/Path/projects/" "~/projects/" "~/SynologyDrive/projects/"))
+(setq org-agenda-files '("~/SynologyDrive/Documents/org/org/org-basics.org"))
+
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;
@@ -78,3 +80,32 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+;; MAPS / Keybinds
+(map! :n "C-c n l" 'org-roam-buffer-toggle)
+
+;; Show the tabs
+(tab-bar-mode)
+
+;; Shows workspaces on the minibuffer at the bottom
+(after! persp-mode
+  (defun display-workspaces-in-minibuffer ()
+    (with-current-buffer " *Minibuf-0*"
+      (erase-buffer)
+      (insert (+workspace--tabline))))
+  (run-with-idle-timer 1 t #'display-workspaces-in-minibuffer)
+  (+workspace/display))
+
+;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+
+
+;; org-roam
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/SynologyDrive/Documents/org/roam")
+  (org-id-locations-file "~/SynologyDrive/Documents/org/roam/.orgids")
+  :config
+  (org-roam-setup))
+

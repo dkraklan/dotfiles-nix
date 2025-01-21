@@ -49,3 +49,9 @@
 ;; (unpin! t)
 
 (package! projectile)
+
+;; I have this pinned here because emacsql removed the sqlite binary, and org-roam/doom/emacsql haven't sorted the mess out yet.
+(package! emacsql
+  :pin "fb05d0f72729a4b4452a3b1168a9b7b35a851a53")
+;; (package! org-roam
+;;   :pin "425d53d56d0d338c781741df87824b1bfe7f88bc")
