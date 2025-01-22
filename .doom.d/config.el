@@ -40,14 +40,12 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/SynologyDrive/Documents/org/org/org-basics.org")
 
 (require 'projectile)
 (projectile-mode +1)
 
 (setq
  projectile-project-search-path '("~/SynologyDrive/Path/projects/" "~/projects/" "~/SynologyDrive/projects/"))
-(setq org-agenda-files '("~/SynologyDrive/Documents/org/org/org-basics.org"))
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -81,8 +79,6 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; MAPS / Keybinds
-(map! :n "C-c n l" 'org-roam-buffer-toggle)
 
 ;; Show the tabs
 (tab-bar-mode)
@@ -109,3 +105,41 @@
   :config
   (org-roam-setup))
 
+;; Org mode
+(setq org-agenda-files '("~/SynologyDrive/Documents/org/org/" "~/SynologyDrive/Documents/org/roam/" "~/SynologyDrive/Documents/org/tasks"))
+(setq org-directory "~/SynologyDrive/Documents/org/org/")
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
+
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :weight 'regular :height (cdr face)))
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+;; ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+(after! org
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-indent-mode)
+              (variable-pitch-mode 1)
+              (auto-fill-mode -1)
+              (visual-line-mode 1)
+              (text-scale-set 2)
+              (visual-fill-column-mode)
+              (setq-default visual-fill-column-center-text t)
+              (setq display-line-numbers nil)
+              )))

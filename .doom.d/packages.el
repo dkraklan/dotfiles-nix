@@ -49,7 +49,7 @@
 ;; (unpin! t)
 
 (package! projectile)
-
+(package! visual-fill-column )
 ;; I have this pinned here because emacsql removed the sqlite binary, and org-roam/doom/emacsql haven't sorted the mess out yet.
 (package! emacsql
   :pin "fb05d0f72729a4b4452a3b1168a9b7b35a851a53")
