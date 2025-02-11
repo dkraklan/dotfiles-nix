@@ -34,6 +34,8 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
+;;(setq doom-theme 'catppuccin)
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -80,6 +82,7 @@
 ;; they are implemented.
 
 
+
 ;; Show the tabs
 (tab-bar-mode)
 
@@ -106,11 +109,19 @@
   (org-roam-setup))
 
 ;; Org mode
-(setq org-agenda-files '("~/SynologyDrive/Documents/org/org/" "~/SynologyDrive/Documents/org/roam/" "~/SynologyDrive/Documents/org/tasks"))
+(setq org-agenda-files '("~/SynologyDrive/Documents/org/tasks"))
 (setq org-directory "~/SynologyDrive/Documents/org/org/")
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
+(setq org-refile-targets
+      '(
+        ("archive.org" :maxlevel . 1)
+        ("tasks.org" :maxlevel . 1)
+        )
+      )
+;; save files when we org-refile
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
 
 (dolist (face '((org-level-1 . 1.2)
                 (org-level-2 . 1.1)
@@ -120,7 +131,7 @@
                 (org-level-6 . 1.1)
                 (org-level-7 . 1.1)
                 (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :weight 'regular :height (cdr face)))
+  (set-face-attribute (car face) nil :weight 'regular :height (cdr face)))
 
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
 (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -142,4 +153,74 @@
               (visual-fill-column-mode)
               (setq-default visual-fill-column-center-text t)
               (setq display-line-numbers nil)
-              )))
+              )
+            )
+
+  )
+
+;; Org Capture templates
+(setq org-capture-templates
+      `(("t" "Tasks / Projects")
+        ("tt" "Task" entry (file+olp "~/SynologyDrive/Documents/org/tasks/tasks.org" "Inbox")
+         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+        ("j" "Journal Entries")
+        ("jj" "Journal" entry
+         (file+olp+datetree "~/SynologyDrive/Documents/org/org/journal.org")
+         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+         ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+         :clock-in :clock-resume
+         :empty-lines 1)
+        ("jm" "Meeting" entry
+         (file+olp+datetree "~/SynologyDrive/Documents/org/org/journal.org")
+         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
+        )
+      )
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((restclient . t)))
+
+;; copilot
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ;; Either form below works—no extra quote for the function:
+              ("C-y" . copilot-accept-completion)
+              ("C-<tab>" . copilot-accept-completion-by-word)))
+
+;; disable auto format on html files
+;; (add-hook 'html-mode-hook
+;;           (lambda ()
+;;             (remove-hook 'before-save-hook #'format-all-buffer t)))
+
+;; (add-hook 'html-mode-hook
+;;           (lambda ()
+;;             (remove-hook 'before-save-hook #'format-all-buffer t)))
+;; (add-hook 'mhtml-mode-hook (lambda () (format-all-mode -1)))
+;; (add-hook 'mhtml-mode-hook
+;;           (lambda ()
+;;             (remove-hook 'before-save-hook #'format-all-buffer t)))
+;; (setq +format-on-save-enabled-modes
+;;       '(not emacs-lisp-mode  ; elisp's mechanisms are good enough
+;; 	sql-mode         ; sqlformat is currently broken
+;; 	tex-mode         ; latexindent is broken
+;; 	latex-mode
+;;         ))
+
+
+
+;; (add-hook 'python-mode-hook #'format-all-mode)
+
+(setq +format-on-save-disabled-modes
+      '(sql-mode           ; sqlformat is currently broken
+        tex-mode           ; latexindent is broken
+        latex-mode
+        LaTeX-mode
+        org-msg-edit-mode
+        html-mode
+        mhtml-mode
+        web-mode-hook)) ; doesn't need a formatter
