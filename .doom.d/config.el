@@ -224,3 +224,7 @@
         html-mode
         mhtml-mode
         web-mode-hook)) ; doesn't need a formatter
+
+;; godot
+(setq treesit-extra-load-path '("/home/dkraklan/Desktop/Godot_Versions/tree-sitter-gdscript/src/"))
+(setq gdscript-godot-executable "/home/dkraklan/Desktop/Godot_Versions/Godot_v4.4.1-stable_linux.x86_64")
