@@ -51,6 +51,7 @@ else
         zsh-syntax-highlighting
         docker
     	rust
+        kubectl
     )
 fi
 
@@ -108,3 +109,5 @@ if [ -d "$HOME/.emacs.d" ]; then
     export PATH="$HOME/.emacs.d/bin:$PATH"
 fi
 
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
