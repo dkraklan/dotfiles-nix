@@ -101,6 +101,7 @@ else
     export PATH=$GOPATH/bin:$PATH
     #docker command to show all containers but just the names and status
     alias dockps="sudo docker ps --format 'table {{.Names}}\t{{.Status}}'"
+    alias godot="/home/dkraklan/Desktop/Godot_Versions/"
 fi
 
 
