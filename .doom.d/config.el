@@ -81,7 +81,10 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-
+;; Mappings
+(map! :leader
+      (:prefix ("f" . "file")
+       :desc "Find file with fzf" "f" #'counsel-fzf))
 
 ;; Show the tabs
 (tab-bar-mode)
@@ -109,7 +112,7 @@
   (org-roam-setup))
 
 ;; Org mode
-(setq org-agenda-files '("~/SynologyDrive/Documents/org/tasks"))
+(setq org-agenda-files '("~/SynologyDrive/Documents/org/tasks" "~/SynologyDrive/Documents/org/roam"))
 (setq org-directory "~/SynologyDrive/Documents/org/org/")
 (setq org-agenda-start-with-log-mode t)
 (setq org-log-done 'time)
@@ -118,6 +121,8 @@
       '(
         ("archive.org" :maxlevel . 1)
         ("tasks.org" :maxlevel . 1)
+        ("spaceboi.org" :maxlevel . 1)
+        ("hostman.org" :maxlevel . 1)
         )
       )
 ;; save files when we org-refile
@@ -159,10 +164,20 @@
   )
 
 ;; Org Capture templates
+;; Template breakdown:
+;; "* TODO %?"   => Creates a heading with "TODO" and places the cursor (%?) for task input.
+;; "%U"          => Inserts the inactive timestamp.
+;; "%a"          => Inserts a contextual link/annotation.
+;; "%i"          => Inserts any initially selected text.
+
 (setq org-capture-templates
       `(("t" "Tasks / Projects")
         ("tt" "Task" entry (file+olp "~/SynologyDrive/Documents/org/tasks/tasks.org" "Inbox")
          "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        ("ts" "Task - SpaceBoi" entry (file+olp "~/SynologyDrive/Documents/org/tasks/spaceboi.org" "Inbox")
+         "* TODO %?" :empty-lines 1)
+        ("th" "Task - HostMan" entry (file+olp "~/SynologyDrive/Documents/org/tasks/hostman.org" "Inbox")
+         "* TODO %?" :empty-lines 1)
 
         ("j" "Journal Entries")
         ("jj" "Journal" entry
@@ -171,6 +186,7 @@
          ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
          :clock-in :clock-resume
          :empty-lines 1)
+
         ("jm" "Meeting" entry
          (file+olp+datetree "~/SynologyDrive/Documents/org/org/journal.org")
          "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
@@ -226,5 +242,18 @@
         web-mode-hook)) ; doesn't need a formatter
 
 ;; godot
+;; Treesitter grammar files
 (setq treesit-extra-load-path '("/home/dkraklan/Desktop/Godot_Versions/tree-sitter-gdscript/src/"))
+;; Path to godot executable
 (setq gdscript-godot-executable "/home/dkraklan/Desktop/Godot_Versions/Godot_v4.4.1-stable_linux.x86_64")
+;; path to docs
+(setq gdscript-docs-local-path "/home/dkraklan/Desktop/Godot_Versions/docs/4.4/")
+
+;; Python poetry fix
+;; We've disabled this hook as otherwise it loads the venv for every python file, it also seems to load every poetry env for every project that projectile is aware of.
+;; to get into the enviroment and get the LSP workign with it do the following
+;; M-x poetry-venv-workon
+;; M-x lsp-restart-workspace
+
+(after! python
+  (remove-hook! 'python-mode-hook 'poetry-tracking-mode))
