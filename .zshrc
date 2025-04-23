@@ -37,6 +37,8 @@ HIST_STAMPS="mm/dd/yyyy"
 
  # For now we run seperate plugins on mac / linx so we differenate here
 if [[ "$(uname)" == "Darwin" ]]; then
+    ssh-add .ssh/dylan_id_ed25519
+    ssh-add .ssh/id_github_ed25519
     plugins=(
         git
         docker
@@ -86,6 +88,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
     alias tl="/Users/dkraklan/.config/scripts/tmux_launch.sh"
 	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+    export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 	export PATH=/opt/homebrew/bin:$PATH
 	alias python=python3
 
