@@ -67,7 +67,7 @@ outer.right =      20
 1 = 'main' #Primary Browser
 2 = 'secondary' #Chat
 3 = 'main' #Terminal
-4 = 'secondary' # Spotify
+4 = 'main' # Spotify
 5 = 'secondary' #Secondary Browser
 6 = 'secondary' #Obsidian
 
