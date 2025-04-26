@@ -64,3 +64,5 @@
 
 (package! ob-restclient)
 
+
+(package! exwm)
