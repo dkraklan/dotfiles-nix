@@ -1,3 +1,16 @@
+#+TITLE: Doom Emacs Configuration
+#+AUTHOR: Dylan Kraklan
+#+PROPERTY: header-args :tangle config.el
+#+STARTUP: content
+
+* Philosophy / Overview
+This be our emacs config.
+** Package Management
+For external packages that the emacs package doens't manage or install we use ~lab_ansible~ to manage them in our ~popos.yml~ playbook
+
+* Display Settings
+
+#+begin_src emacs-lisp
 ;; lexical-binding: t
 ;; Enable native compilation for better performance
 (setq comp-native-compilation t)
@@ -5,7 +18,12 @@
 (setq redisplay-dont-pause t)
 (setq inhibit-redisplay nil)
 (setq idle-update-delay 0.5)
+#+end_src
 
+* Theme and Visual Settings
+Theme settings, modeline configuration, and visual appearance adjustments.
+
+#+begin_src emacs-lisp
 ;; Set the default theme
 (setq doom-theme 'doom-one)
 
@@ -14,7 +32,12 @@
 
 ;; Set transparency for the Emacs frame
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+#+end_src
 
+* Project Management
+Projectile configuration for navigating and managing projects.
+
+#+begin_src emacs-lisp
 ;; Initialize projectile
 (require 'projectile)
 (projectile-mode +1)
@@ -22,7 +45,12 @@
 ;; Set project search paths
 (setq
  projectile-project-search-path '("~/SynologyDrive/Path/projects/" "~/projects/" "~/SynologyDrive/projects/"))
+#+end_src
 
+* Key Bindings
+Custom keybindings and keyboard shortcuts.
+
+#+begin_src emacs-lisp
 ;; File finding with fzf
 (map! :leader
       (:prefix ("f" . "file")
@@ -40,12 +68,22 @@
   (define-key evil-motion-state-map (kbd "C-SPC") nil)
   (define-key evil-emacs-state-map (kbd "C-SPC") nil)
   )
+#+end_src
 
+* Counsel Configuration
+Customizations for ivy/counsel functionality.
+
+#+begin_src emacs-lisp
 ;; Configure counsel to only show app names (not full paths) in app launcher
 (use-package! counsel
   :custom
   (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only))
+#+end_src
 
+* Workspace Display
+Configure the workspace display in the minibuffer.
+
+#+begin_src emacs-lisp
 ;; Shows workspaces on the minibuffer at the bottom
 (after! persp-mode
   (defun display-workspaces-in-minibuffer ()
@@ -54,7 +92,12 @@
       (insert (+workspace--tabline))))
   (run-with-idle-timer 0.5 nil #'display-workspaces-in-minibuffer)
   (+workspace/display))
+#+end_src
 
+* Org-roam Configuration
+Setup for org-roam knowledge management system.
+
+#+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
   :custom
@@ -77,7 +120,13 @@
   :config
   (require 'org-roam-dailies)
   (org-roam-setup))
+#+end_src
 
+#+RESULTS:
+: t
+** Org roam agenda
+
+#+begin_src emacs-lisp
 ;; The buffer you put this code in must have lexical-binding set to t!
 ;; See the final configuration at the end for more details.
 
@@ -97,7 +146,13 @@
 
 ;; Build the agenda list the first time for the session
 (my/org-roam-refresh-agenda-list)
+#+end_src
 
+#+RESULTS:
+| /home/dkraklan/SynologyDrive/Documents/org/roam/20250505080037-path_network_agenda.org | /home/dkraklan/SynologyDrive/Documents/org/roam/20250505081154-personal.org |
+** Quick Capture
+
+#+begin_src emacs-lisp
 (defun my/org-roam-project-finalize-hook ()
   "Adds the captured project file to `org-agenda-files' if the
 capture was not aborted."
@@ -125,7 +180,15 @@ capture was not aborted."
       (:prefix ("n" . "notes")
        (:prefix ("r" . "roam")
         :desc "Capture task to project" "t" #'my/org-roam-capture-task)))
+#+end_src
 
+#+RESULTS:
+: my/org-roam-capture-task
+
+* Org Mode Configuration
+Settings for org-mode, including files, appearance, and behavior.
+
+#+begin_src emacs-lisp
 ;; Org mode files and directories
 ;; (setq org-agenda-files '("~/SynologyDrive/Documents/org/tasks" "~/SynologyDrive/Documents/org/roam"))
 (setq org-directory "~/SynologyDrive/Documents/org/org/")
@@ -180,7 +243,15 @@ capture was not aborted."
               (setq display-line-numbers nil)
               )
             ))
+#+end_src
 
+#+RESULTS:
+| #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (text-scale-set 2) (visual-fill-column-mode) (setq-default visual-fill-column-center-text t) (setq display-line-numbers nil)) nil] | er/add-org-mode-expansions | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (text-scale-set 2) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil)) nil] | #[(&rest _) ((progn (let ((tail '(after-change-major-mode-hook))) (while tail (let ((hook (car tail))) (let ((tail (list #'(lambda (&rest _) (if (derived-mode-p 'org-mode) (progn (setq tab-width 8))))))) (while tail (let ((func (car tail))) (add-hook hook func nil t) (setq tail (cdr tail))))) (setq tail (cdr tail)))))) (add-hook 'save-place-after-find-file-hook #'+org-make-last-point-visible-h nil t)) ((hook . org-mode-hook))] | +lookup--init-org-mode-handlers-h | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | doom-disable-show-paren-mode-h | doom-disable-show-trailing-whitespace-h | org-appear-mode | org-fancy-priorities-mode | org-superstar-mode | evil-org-mode | org-eldoc-load | toc-org-enable | flyspell-mode | embrace-org-mode-hook | +literate-enable-recompile-h |
+
+* Org Capture Templates
+Templates for quickly capturing notes, tasks, and journal entries.
+
+#+begin_src emacs-lisp
 ;; Org Capture templates
 ;; Template breakdown:
 ;; "* TODO %?"   => Creates a heading with "TODO" and places the cursor (%?) for task input.
@@ -211,7 +282,12 @@ capture was not aborted."
          :clock-in :clock-resume
          :empty-lines 1)
         ))
+#+end_src
 
+* Org Babel Languages
+Configuration for code execution in org-mode.
+
+#+begin_src emacs-lisp
 ;; Configure languages for org-babel code execution
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -220,7 +296,12 @@ capture was not aborted."
    (shell . t)
    )
  )
+#+end_src
 
+* Copilot Configuration
+Setup for GitHub Copilot integration.
+
+#+begin_src emacs-lisp
 ;; Configure Copilot AI code completion
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
@@ -228,7 +309,12 @@ capture was not aborted."
               ;; Either form below works—no extra quote for the function:
               ("C-y" . copilot-accept-completion)
               ("C-<tab>" . copilot-accept-completion-by-word)))
+#+end_src
 
+* Formatting Configuration
+Settings for code formatting behavior.
+
+#+begin_src emacs-lisp
 ;; Disable auto-formatting in specific modes
 (setq +format-on-save-disabled-modes
       '(sql-mode           ; sqlformat is currently broken
@@ -239,7 +325,15 @@ capture was not aborted."
         html-mode
         mhtml-mode
         web-mode-hook)) ; doesn't need a formatter
+#+end_src
 
+* Development Tools Configuration
+Settings for various programming languages and tools.
+
+** Godot Development
+Configuration for Godot game development.
+
+#+begin_src emacs-lisp
 ;; Godot game development configuration
 ;; Treesitter grammar files
 (setq treesit-extra-load-path '("/home/dkraklan/Desktop/Godot_Versions/tree-sitter-gdscript/src/"))
@@ -247,7 +341,12 @@ capture was not aborted."
 (setq gdscript-godot-executable "/home/dkraklan/Desktop/Godot_Versions/Godot_v4.4.1-stable_linux.x86_64")
 ;; path to docs
 (setq gdscript-docs-local-path "/home/dkraklan/Desktop/Godot_Versions/docs/4.4/")
+#+end_src
 
+** Python Configuration
+Fix for Python Poetry integration.
+
+#+begin_src emacs-lisp
 ;; Python poetry fix
 ;; We've disabled this hook as otherwise it loads the venv for every python file, it also seems to load every poetry env for every project that projectile is aware of.
 ;; to get into the enviroment and get the LSP workign with it do the following
@@ -256,6 +355,13 @@ capture was not aborted."
 
 (after! python
   (remove-hook! 'python-mode-hook 'poetry-tracking-mode))
+#+end_src
+
+* EXWM Configuration
+Emacs X Window Manager setup and configuration.
+
+** Initialization ( main config )
+#+begin_src emacs-lisp
 
 ;; EXWM initialization hook
 (defun gator/exwm-init-hook ()
@@ -287,7 +393,12 @@ capture was not aborted."
   (gator/run-in-background "blueman-applet")
   ;; Dunst for notifications
   (gator/run-in-background "dunst"))
+#+end_src
 
+** EXWM Helper Functions
+Utility functions for managing EXWM.
+
+#+begin_src emacs-lisp
 ;; Function to run commands in the background
 (defun gator/run-in-background (command)
   (let ((command-parts (split-string command "[ ]+")))
@@ -310,7 +421,12 @@ capture was not aborted."
     ("org.wezfurlong.wezterm" (exwm-workspace-move-window 2))
     ("mpv" (exwm-floating-toggle-floating)
      (exwm-layout-toggle-mode-line))))
+#+end_src
 
+** Desktop Environment
+Configure desktop environment controls (brightness, volume, etc).
+
+#+begin_src emacs-lisp
 ;; Desktop environment controls (brightness, volume, etc.)
 (use-package desktop-environment
   :after exwm
@@ -320,7 +436,12 @@ capture was not aborted."
   (desktop-environment-brightness-small-decrement "2%-")
   (desktop-environment-brightness-normal-increment "5%+")
   (desktop-environment-brightness-normal-decrement "5%-"))
+#+end_src
 
+** Polybar Integration
+Configuration for Polybar with EXWM.
+
+#+begin_src emacs-lisp
 ;; Start server for polybar to connect to
 (server-start)
 
@@ -358,7 +479,12 @@ capture was not aborted."
 ;; Function for controlling dunst notifications
 (defun gator/dunstctl (command)
   (start-process-shell-command "dunstctl" nil (concat "dunstctl " command)))
+#+end_src
 
+** Main EXWM Setup
+The core EXWM configuration.
+
+#+begin_src emacs-lisp
 ;; EXWM configuration
 (use-package exwm
   :config
@@ -462,6 +588,11 @@ capture was not aborted."
   ;; Finally enable EXWM
   (exwm-enable))
 
+#+end_src
+* Mu4e mail config
+we use mbsync (isync) to sync our email. Google is getting pretty crazy about auth, but it seems like for the time being since we have 2fa enabled on the account we can use an app password instead of our actual account password.
+
+#+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 ;; don't need to run cleanup after indexing for gmail
 (setq mu4e-index-cleanup nil
@@ -516,3 +647,5 @@ capture was not aborted."
     (:name "Today's messages" :query "date:today..now" :key ?t)
     (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
     (:name "Messages with images" :query "mime:image/*" :key ?p)))
+
+#+END_SRC
