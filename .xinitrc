@@ -17,4 +17,5 @@ xset r rate 200 60
 #export CLUTTER_IM_MODULE=xim
 
 # Finally start Emacs
-exec emacs -f exwm-enable
+# exec emacs -f exwm-enable
+exec emacsclient -c -a "" -e "(exwm-enable)" -e "(exwm-init)"
