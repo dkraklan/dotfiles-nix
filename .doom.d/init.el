@@ -1,5 +1,9 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
+(setq doom-leader-key "SPC")
+(global-unset-key (kbd "C-SPC"))
+(setq doom-leader-alt-key "C-SPC")
+
 ;; This file controls what Doom modules are enabled and what order they load
 ;; in. Remember to run 'doom sync' after modifying it!
 
@@ -82,7 +86,7 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       ;;(spell +flyspell) ; tasing you for misspelling mispelling
+       (spell +flyspell) ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -180,7 +184,8 @@
        ;;zig               ; C, but simpler
 
        :email
-       ;;(mu4e +org +gmail)
+       (mu4e +org +gmail)
+       ;; mu4e
        ;;notmuch
        ;;(wanderlust +gmail)
 
@@ -192,5 +197,6 @@
        ;;(rss +org)        ; emacs as an RSS reader
 
        :config
-       ;;literate
+       literate
        (default +bindings +smartparens))
+

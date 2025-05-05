@@ -64,5 +64,7 @@
 
 (package! ob-restclient)
 
-
+;; EXWM
 (package! exwm)
+(package! desktop-environment )
+
