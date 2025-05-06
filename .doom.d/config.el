@@ -1,4 +1,4 @@
-;; lexical-binding: t
+;;; -*- lexical-binding: t; -*-
 ;; Enable native compilation for better performance
 (setq comp-native-compilation t)
 ;; when using EXWM i had to enable these 3 otherwise the screen wouldn't update
@@ -119,12 +119,28 @@ capture was not aborted."
                                    :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
                                                           "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
                                                           ("Tasks"))))))
-
+  ;; Capture a new agenda item for today
+(defun my/org-roam-capture-agenda ()
+  (interactive)
+  ;; Add the project file to the agenda after capture is finished
+  (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+  ;; Capture the new task, creating the project file if necessary
+  (org-roam-capture- :node (org-roam-node-read
+                            nil
+                            (my/org-roam-filter-by-tag "Project"))
+                     :templates '(("a" "agenda" plain "* TODO %?\nSCHEDULED: %t"
+                                   :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                          "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                                                          ("Tasks"))))))
 ;; Define the keybinding using Doom's map! macro
 (map! :leader
       (:prefix ("n" . "notes")
        (:prefix ("r" . "roam")
         :desc "Capture task to project" "t" #'my/org-roam-capture-task)))
+(map! :leader
+      (:prefix ("n" . "notes")
+       (:prefix ("r" . "roam")
+        :desc "Capture task with schedule to project" "a" #'my/org-roam-capture-agenda)))
 
 ;; Org mode files and directories
 ;; (setq org-agenda-files '("~/SynologyDrive/Documents/org/tasks" "~/SynologyDrive/Documents/org/roam"))
@@ -220,6 +236,24 @@ capture was not aborted."
    (shell . t)
    )
  )
+
+;; Enable Emacs Lisp mode features in Org source blocks
+(after! org
+  ;; Improve Elisp editing in Org mode
+  (defun my/org-elisp-block-setup ()
+    "Setup for editing Elisp in Org source blocks."
+    ;; Enable company completion
+    (setq-local company-backends '(company-elisp))
+    ;; Enable eldoc for documentation
+    (eldoc-mode 1)
+    ;; Enable syntax checking
+    (flycheck-mode 1))
+
+  ;; Hook into Org source blocks for elisp
+  (add-hook! 'org-src-mode-hook
+    (when (eq major-mode 'emacs-lisp-mode)
+      (message "elisp mode")
+      (my/org-elisp-block-setup))))
 
 ;; Configure Copilot AI code completion
 (use-package! copilot

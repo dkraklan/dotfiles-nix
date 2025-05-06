@@ -11,7 +11,7 @@ For external packages that the emacs package doens't manage or install we use ~l
 * Display Settings
 
 #+begin_src emacs-lisp
-;; lexical-binding: t
+;;; -*- lexical-binding: t; -*-
 ;; Enable native compilation for better performance
 (setq comp-native-compilation t)
 ;; when using EXWM i had to enable these 3 otherwise the screen wouldn't update
@@ -174,12 +174,28 @@ capture was not aborted."
                                    :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
                                                           "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
                                                           ("Tasks"))))))
-
+  ;; Capture a new agenda item for today
+(defun my/org-roam-capture-agenda ()
+  (interactive)
+  ;; Add the project file to the agenda after capture is finished
+  (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+  ;; Capture the new task, creating the project file if necessary
+  (org-roam-capture- :node (org-roam-node-read
+                            nil
+                            (my/org-roam-filter-by-tag "Project"))
+                     :templates '(("a" "agenda" plain "* TODO %?\nSCHEDULED: %t"
+                                   :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                          "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                                                          ("Tasks"))))))
 ;; Define the keybinding using Doom's map! macro
 (map! :leader
       (:prefix ("n" . "notes")
        (:prefix ("r" . "roam")
         :desc "Capture task to project" "t" #'my/org-roam-capture-task)))
+(map! :leader
+      (:prefix ("n" . "notes")
+       (:prefix ("r" . "roam")
+        :desc "Capture task with schedule to project" "a" #'my/org-roam-capture-agenda)))
 #+end_src
 
 #+RESULTS:
@@ -248,7 +264,7 @@ Settings for org-mode, including files, appearance, and behavior.
 #+RESULTS:
 | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (text-scale-set 2) (visual-fill-column-mode) (setq-default visual-fill-column-center-text t) (setq display-line-numbers nil)) nil] | er/add-org-mode-expansions | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (text-scale-set 2) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil)) nil] | #[(&rest _) ((progn (let ((tail '(after-change-major-mode-hook))) (while tail (let ((hook (car tail))) (let ((tail (list #'(lambda (&rest _) (if (derived-mode-p 'org-mode) (progn (setq tab-width 8))))))) (while tail (let ((func (car tail))) (add-hook hook func nil t) (setq tail (cdr tail))))) (setq tail (cdr tail)))))) (add-hook 'save-place-after-find-file-hook #'+org-make-last-point-visible-h nil t)) ((hook . org-mode-hook))] | +lookup--init-org-mode-handlers-h | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | doom-disable-show-paren-mode-h | doom-disable-show-trailing-whitespace-h | org-appear-mode | org-fancy-priorities-mode | org-superstar-mode | evil-org-mode | org-eldoc-load | toc-org-enable | flyspell-mode | embrace-org-mode-hook | +literate-enable-recompile-h |
 
-* Org Capture Templates
+** Org Capture Templates
 Templates for quickly capturing notes, tasks, and journal entries.
 
 #+begin_src emacs-lisp
@@ -284,7 +300,7 @@ Templates for quickly capturing notes, tasks, and journal entries.
         ))
 #+end_src
 
-* Org Babel Languages
+** Org Babel Languages
 Configuration for code execution in org-mode.
 
 #+begin_src emacs-lisp
@@ -296,6 +312,30 @@ Configuration for code execution in org-mode.
    (shell . t)
    )
  )
+#+end_src
+** Org Coding
+
+Pretty sure this isn't working
+#+begin_src elisp
+;; Enable Emacs Lisp mode features in Org source blocks
+(after! org
+  ;; Improve Elisp editing in Org mode
+  (defun my/org-elisp-block-setup ()
+    "Setup for editing Elisp in Org source blocks."
+    ;; Enable company completion
+    (setq-local company-backends '(company-elisp))
+    ;; Enable eldoc for documentation
+    (eldoc-mode 1)
+    ;; Enable syntax checking
+    (flycheck-mode 1))
+
+  ;; Hook into Org source blocks for elisp
+  (add-hook! 'org-src-mode-hook
+    (when (eq major-mode 'emacs-lisp-mode)
+      (message "elisp mode")
+      (my/org-elisp-block-setup))))
+
+
 #+end_src
 
 * Copilot Configuration
