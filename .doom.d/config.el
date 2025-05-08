@@ -15,6 +15,13 @@
 ;; Set transparency for the Emacs frame
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 
+(when (member "Roboto" (font-family-list))
+  (set-face-attribute 'default nil :font "Roboto" :height 108)
+  (set-face-attribute 'fixed-pitch nil :family "Roboto"))
+
+(when (member "Source Sans Pro" (font-family-list))
+  (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 1.18))
+
 ;; Initialize projectile
 (require 'projectile)
 (projectile-mode +1)
@@ -115,7 +122,7 @@ capture was not aborted."
   (org-roam-capture- :node (org-roam-node-read
                             nil
                             (my/org-roam-filter-by-tag "Project"))
-                     :templates '(("p" "project" plain "* TODO %?"
+                     :templates '(("p" "project" plain "** TODO %?"
                                    :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
                                                           "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
                                                           ("Tasks"))))))
@@ -128,7 +135,7 @@ capture was not aborted."
   (org-roam-capture- :node (org-roam-node-read
                             nil
                             (my/org-roam-filter-by-tag "Project"))
-                     :templates '(("a" "agenda" plain "* TODO %?\nSCHEDULED: %t"
+                     :templates '(("a" "agenda" plain "** TODO %?\nSCHEDULED: %t"
                                    :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
                                                           "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
                                                           ("Tasks"))))))
@@ -158,44 +165,6 @@ capture was not aborted."
       )
 ;; save files when we org-refile
 (advice-add 'org-refile :after 'org-save-all-org-buffers)
-
-;; hide emphasis markers
-(setq org-hide-emphasis-markers t)
-
-;; Heading sizes for better visual hierarchy
-(dolist (face '((org-level-1 . 1.2)
-                (org-level-2 . 1.1)
-                (org-level-3 . 1.05)
-                (org-level-4 . 1.0)
-                (org-level-5 . 1.1)
-                (org-level-6 . 1.1)
-                (org-level-7 . 1.1)
-                (org-level-8 . 1.1)))
-  (set-face-attribute (car face) nil :weight 'regular :height (cdr face)))
-
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-;; ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-;; Org mode hooks for better reading and writing experience
-(after! org
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (org-indent-mode)
-              (variable-pitch-mode 1)
-              (auto-fill-mode -1)
-              (visual-line-mode 1)
-              (text-scale-set 2)
-              (visual-fill-column-mode)
-              (setq-default visual-fill-column-center-text t)
-              (setq display-line-numbers nil)
-              )
-            ))
 
 ;; Org Capture templates
 ;; Template breakdown:
@@ -237,23 +206,66 @@ capture was not aborted."
    )
  )
 
-;; Enable Emacs Lisp mode features in Org source blocks
-(after! org
-  ;; Improve Elisp editing in Org mode
-  (defun my/org-elisp-block-setup ()
-    "Setup for editing Elisp in Org source blocks."
-    ;; Enable company completion
-    (setq-local company-backends '(company-elisp))
-    ;; Enable eldoc for documentation
-    (eldoc-mode 1)
-    ;; Enable syntax checking
-    (flycheck-mode 1))
+;; use the major mode for the relevant language in src blocks
+(setq org-src-fontify-natively t
+	  org-src-tab-acts-natively t
+      org-edit-src-content-indentation 0)
 
-  ;; Hook into Org source blocks for elisp
-  (add-hook! 'org-src-mode-hook
-    (when (eq major-mode 'emacs-lisp-mode)
-      (message "elisp mode")
-      (my/org-elisp-block-setup))))
+;; hide emphasis markers
+(setq org-hide-emphasis-markers t)
+(set-face-attribute 'org-block nil            :foreground nil :inherit
+'fixed-pitch :height 0.85)
+(set-face-attribute 'org-code nil             :inherit '(shadow fixed-pitch) :height 0.85)
+;; (set-face-attribute 'org-indent nil           :inherit '(org-hide fixed-pitch) :height 0.85)
+(set-face-attribute 'org-verbatim nil         :inherit '(shadow fixed-pitch) :height 0.85)
+(set-face-attribute 'org-special-keyword nil  :inherit '(font-lock-comment-face
+fixed-pitch))
+(set-face-attribute 'org-meta-line nil        :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil         :inherit 'fixed-pitch)
+
+(require 'org-indent)
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+
+(setq org-adapt-indentation t
+      org-hide-leading-stars t
+      org-pretty-entities t
+	  org-ellipsis "  ·")
+;; Heading sizes for better visual hierarchy
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+  (set-face-attribute (car face) nil :weight 'regular :height (cdr face)))
+
+;; Make the document title a bit bigger
+(set-face-attribute 'org-document-title nil  :weight
+'bold :height 1.8)
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;; Org mode hooks for better reading and writing experience
+(after! org
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-indent-mode)
+              (variable-pitch-mode 1)
+              (auto-fill-mode -1)
+              (visual-line-mode 1)
+              ;; (text-scale-set 2)
+              (visual-fill-column-mode)
+              (setq-default visual-fill-column-center-text t)
+              (setq display-line-numbers nil)
+              )
+            ))
 
 ;; Configure Copilot AI code completion
 (use-package! copilot
@@ -320,7 +332,10 @@ capture was not aborted."
   ;; bluetooth control
   (gator/run-in-background "blueman-applet")
   ;; Dunst for notifications
-  (gator/run-in-background "dunst"))
+  (gator/run-in-background "dunst")
+  ;; Synology drive
+  (gator/run-in-background "synology-drive")
+  )
 
 ;; Function to run commands in the background
 (defun gator/run-in-background (command)
