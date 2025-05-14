@@ -33,12 +33,13 @@ Theme settings, modeline configuration, and visual appearance adjustments.
 ;; Set transparency for the Emacs frame
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 
-(when (member "Roboto" (font-family-list))
-  (set-face-attribute 'default nil :font "Roboto" :height 108)
-  (set-face-attribute 'fixed-pitch nil :family "Roboto"))
+;; (when (member "Roboto" (font-family-list))
+;;   ;; setting this breaks the whichkey menu for some reason
+;;   ;; (set-face-attribute 'default nil :font "Roboto" :height 108)
+;;   (set-face-attribute 'fixed-pitch nil :family "Roboto"))
 
-(when (member "Source Sans Pro" (font-family-list))
-  (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 1.18))
+;; (when (member "Source Sans Pro" (font-family-list))
+;;   (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 1.18))
 
 #+end_src
 
@@ -307,10 +308,11 @@ fixed-pitch))
 (set-face-attribute 'org-meta-line nil        :inherit '(font-lock-comment-face fixed-pitch))
 (set-face-attribute 'org-checkbox nil         :inherit 'fixed-pitch)
 
+
 (require 'org-indent)
 (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
-(add-hook 'org-mode-hook 'variable-pitch-mode)
+;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 (setq org-adapt-indentation t
       org-hide-leading-stars t
@@ -331,11 +333,6 @@ fixed-pitch))
 (set-face-attribute 'org-document-title nil  :weight
 'bold :height 1.8)
 
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
 ;; Org mode hooks for better reading and writing experience
 (after! org
   (add-hook 'org-mode-hook
@@ -348,11 +345,17 @@ fixed-pitch))
               (visual-fill-column-mode)
               (setq-default visual-fill-column-center-text t)
               (setq display-line-numbers nil)
+              ;; Add this to your configuration to ensure tables use fixed-pitch font
+              (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
               )
             ))
 
 
 #+end_src
+
+#+RESULTS:
+| #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (visual-fill-column-mode) (setq-default visual-fill-column-center-text t) (setq display-line-numbers nil) (set-face-attribute 'org-table nil :inherit 'fixed-pitch)) nil] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil) (set-face-attribute 'org-table nil :inherit 'fixed-pitch)) nil] | er/add-org-mode-expansions | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil)) (t)] | variable-pitch-mode | #[(&rest _) ((progn (let ((tail '(after-change-major-mode-hook))) (while tail (let ((hook (car tail))) (let ((tail (list #'(lambda (&rest _) (if (derived-mode-p 'org-mode) (progn (setq tab-width 8))))))) (while tail (let ((func (car tail))) (add-hook hook func nil t) (setq tail (cdr tail))))) (setq tail (cdr tail)))))) (add-hook 'save-place-after-find-file-hook #'+org-make-last-point-visible-h nil t)) ((hook . org-mode-hook))] | +lookup--init-org-mode-handlers-h | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | doom-disable-show-paren-mode-h | doom-disable-show-trailing-whitespace-h | org-appear-mode | org-fancy-priorities-mode | org-superstar-mode | evil-org-mode | org-eldoc-load | toc-org-enable | flyspell-mode | embrace-org-mode-hook | +literate-enable-recompile-h |
+
 ** Guides / Useful links / Help
 https://sophiebos.io/posts/prettifying-emacs-org-mode/
 a lot of my rice and coding sections are based off this article.

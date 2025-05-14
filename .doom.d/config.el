@@ -15,12 +15,13 @@
 ;; Set transparency for the Emacs frame
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 
-(when (member "Roboto" (font-family-list))
-  (set-face-attribute 'default nil :font "Roboto" :height 108)
-  (set-face-attribute 'fixed-pitch nil :family "Roboto"))
+;; (when (member "Roboto" (font-family-list))
+;;   ;; setting this breaks the whichkey menu for some reason
+;;   ;; (set-face-attribute 'default nil :font "Roboto" :height 108)
+;;   (set-face-attribute 'fixed-pitch nil :family "Roboto"))
 
-(when (member "Source Sans Pro" (font-family-list))
-  (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 1.18))
+;; (when (member "Source Sans Pro" (font-family-list))
+;;   (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 1.18))
 
 ;; Initialize projectile
 (require 'projectile)
@@ -223,10 +224,11 @@ fixed-pitch))
 (set-face-attribute 'org-meta-line nil        :inherit '(font-lock-comment-face fixed-pitch))
 (set-face-attribute 'org-checkbox nil         :inherit 'fixed-pitch)
 
+
 (require 'org-indent)
 (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
-(add-hook 'org-mode-hook 'variable-pitch-mode)
+;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 (setq org-adapt-indentation t
       org-hide-leading-stars t
@@ -247,11 +249,6 @@ fixed-pitch))
 (set-face-attribute 'org-document-title nil  :weight
 'bold :height 1.8)
 
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
 ;; Org mode hooks for better reading and writing experience
 (after! org
   (add-hook 'org-mode-hook
@@ -264,6 +261,8 @@ fixed-pitch))
               (visual-fill-column-mode)
               (setq-default visual-fill-column-center-text t)
               (setq display-line-numbers nil)
+              ;; Add this to your configuration to ensure tables use fixed-pitch font
+              (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
               )
             ))
 
