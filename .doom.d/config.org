@@ -69,14 +69,27 @@ Custom keybindings and keyboard shortcuts.
 (map! :leader
       (:prefix ("b" . "buffer")
        :desc "Switch buffer using counsel" "B" #'counsel-switch-buffer))
-(after! evil
-  ;; Remove any existing binding for C-SPC in all states
-  (define-key evil-insert-state-map (kbd "C-SPC") nil)
-  (define-key evil-normal-state-map (kbd "C-SPC") nil)
-  (define-key evil-visual-state-map (kbd "C-SPC") nil)
-  (define-key evil-motion-state-map (kbd "C-SPC") nil)
-  (define-key evil-emacs-state-map (kbd "C-SPC") nil)
-  )
+;; First, unbind C-SPC from its default command (set-mark-command)
+(global-unset-key (kbd "C-SPC"))
+
+;; Create a helper function to simulate pressing the SPC leader key
+(defun my/simulate-doom-leader-key ()
+  "Simulate pressing the Doom leader key (SPC)."
+  (interactive)
+  (setq prefix-arg current-prefix-arg)
+  (setq unread-command-events
+        (append (listify-key-sequence (kbd "SPC"))
+                unread-command-events)))
+
+;; Bind C-SPC to our helper function
+(global-set-key (kbd "C-SPC") #'my/simulate-doom-leader-key)
+
+;; Provide an alternative binding for set-mark-command
+(global-set-key (kbd "M-SPC") #'set-mark-command)
+
+;; For EXWM (if you're using it)
+(after! exwm
+  (add-to-list 'exwm-input-prefix-keys ?\C-\ ))  ;; This is C-SPC
 #+end_src
 
 * Counsel Configuration
@@ -273,7 +286,7 @@ Templates for quickly capturing notes, tasks, and journal entries.
         ))
 #+end_src
 
-** Org Babel Languages
+** Org Babel
 Configuration for code execution in org-mode.
 
 #+begin_src emacs-lisp
@@ -285,6 +298,18 @@ Configuration for code execution in org-mode.
    (shell . t)
    )
  )
+;; Disable evaluation for all src blocks by default
+(after! org
+  ;; Set the default "don't evaluate" behavior
+  (setq org-confirm-babel-evaluate nil
+        org-babel-default-header-args '((:eval . "never")))
+
+  ;; Optional: Add a security hook to prevent accidental evaluation
+  (defun my/org-confirm-babel-evaluate (lang body)
+    "Prompt for confirmation before executing code blocks."
+    (not (string= lang "emacs-lisp")))
+
+  (setq org-confirm-babel-evaluate #'my/org-confirm-babel-evaluate))
 #+end_src
 ** Org Coding
 #+begin_src elisp
@@ -355,7 +380,10 @@ fixed-pitch))
 
 #+RESULTS:
 | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (visual-fill-column-mode) (setq-default visual-fill-column-center-text t) (setq display-line-numbers nil) (set-face-attribute 'org-table nil :inherit 'fixed-pitch)) nil] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil) (set-face-attribute 'org-table nil :inherit 'fixed-pitch)) nil] | er/add-org-mode-expansions | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil)) (t)] | variable-pitch-mode | #[(&rest _) ((progn (let ((tail '(after-change-major-mode-hook))) (while tail (let ((hook (car tail))) (let ((tail (list #'(lambda (&rest _) (if (derived-mode-p 'org-mode) (progn (setq tab-width 8))))))) (while tail (let ((func (car tail))) (add-hook hook func nil t) (setq tail (cdr tail))))) (setq tail (cdr tail)))))) (add-hook 'save-place-after-find-file-hook #'+org-make-last-point-visible-h nil t)) ((hook . org-mode-hook))] | +lookup--init-org-mode-handlers-h | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | doom-disable-show-paren-mode-h | doom-disable-show-trailing-whitespace-h | org-appear-mode | org-fancy-priorities-mode | org-superstar-mode | evil-org-mode | org-eldoc-load | toc-org-enable | flyspell-mode | embrace-org-mode-hook | +literate-enable-recompile-h |
-
+** Org Modern Mode
+#+begin_src emacs-lisp
+(with-eval-after-load 'org (global-org-modern-mode))
+#+end_src
 ** Guides / Useful links / Help
 https://sophiebos.io/posts/prettifying-emacs-org-mode/
 a lot of my rice and coding sections are based off this article.

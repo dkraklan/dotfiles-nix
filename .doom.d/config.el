@@ -40,14 +40,27 @@
 (map! :leader
       (:prefix ("b" . "buffer")
        :desc "Switch buffer using counsel" "B" #'counsel-switch-buffer))
-(after! evil
-  ;; Remove any existing binding for C-SPC in all states
-  (define-key evil-insert-state-map (kbd "C-SPC") nil)
-  (define-key evil-normal-state-map (kbd "C-SPC") nil)
-  (define-key evil-visual-state-map (kbd "C-SPC") nil)
-  (define-key evil-motion-state-map (kbd "C-SPC") nil)
-  (define-key evil-emacs-state-map (kbd "C-SPC") nil)
-  )
+;; First, unbind C-SPC from its default command (set-mark-command)
+(global-unset-key (kbd "C-SPC"))
+
+;; Create a helper function to simulate pressing the SPC leader key
+(defun my/simulate-doom-leader-key ()
+  "Simulate pressing the Doom leader key (SPC)."
+  (interactive)
+  (setq prefix-arg current-prefix-arg)
+  (setq unread-command-events
+        (append (listify-key-sequence (kbd "SPC"))
+                unread-command-events)))
+
+;; Bind C-SPC to our helper function
+(global-set-key (kbd "C-SPC") #'my/simulate-doom-leader-key)
+
+;; Provide an alternative binding for set-mark-command
+(global-set-key (kbd "M-SPC") #'set-mark-command)
+
+;; For EXWM (if you're using it)
+(after! exwm
+  (add-to-list 'exwm-input-prefix-keys ?\C-\ ))  ;; This is C-SPC
 
 ;; Configure counsel to only show app names (not full paths) in app launcher
 (use-package! counsel
@@ -206,6 +219,18 @@ capture was not aborted."
    (shell . t)
    )
  )
+;; Disable evaluation for all src blocks by default
+(after! org
+  ;; Set the default "don't evaluate" behavior
+  (setq org-confirm-babel-evaluate nil
+        org-babel-default-header-args '((:eval . "never")))
+
+  ;; Optional: Add a security hook to prevent accidental evaluation
+  (defun my/org-confirm-babel-evaluate (lang body)
+    "Prompt for confirmation before executing code blocks."
+    (not (string= lang "emacs-lisp")))
+
+  (setq org-confirm-babel-evaluate #'my/org-confirm-babel-evaluate))
 
 ;; use the major mode for the relevant language in src blocks
 (setq org-src-fontify-natively t
@@ -265,6 +290,8 @@ fixed-pitch))
               (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
               )
             ))
+
+(with-eval-after-load 'org (global-org-modern-mode))
 
 ;; Configure Copilot AI code completion
 (use-package! copilot

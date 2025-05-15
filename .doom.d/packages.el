@@ -68,3 +68,4 @@
 (package! exwm)
 (package! desktop-environment )
 
+(package! org-modern)
