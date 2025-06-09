@@ -40,27 +40,6 @@
 (map! :leader
       (:prefix ("b" . "buffer")
        :desc "Switch buffer using counsel" "B" #'counsel-switch-buffer))
-;; First, unbind C-SPC from its default command (set-mark-command)
-(global-unset-key (kbd "C-SPC"))
-
-;; Create a helper function to simulate pressing the SPC leader key
-(defun my/simulate-doom-leader-key ()
-  "Simulate pressing the Doom leader key (SPC)."
-  (interactive)
-  (setq prefix-arg current-prefix-arg)
-  (setq unread-command-events
-        (append (listify-key-sequence (kbd "SPC"))
-                unread-command-events)))
-
-;; Bind C-SPC to our helper function
-(global-set-key (kbd "C-SPC") #'my/simulate-doom-leader-key)
-
-;; Provide an alternative binding for set-mark-command
-(global-set-key (kbd "M-SPC") #'set-mark-command)
-
-;; For EXWM (if you're using it)
-(after! exwm
-  (add-to-list 'exwm-input-prefix-keys ?\C-\ ))  ;; This is C-SPC
 
 ;; Configure counsel to only show app names (not full paths) in app launcher
 (use-package! counsel
@@ -378,13 +357,26 @@ fixed-pitch))
     ("Brave-browser" (exwm-workspace-rename-buffer (format "Brave: %s" exwm-title)))))
 
 ;; Configure windows based on their class
+;; Flag to track if we've already moved a Brave browser window
+(defvar gator/brave-window-moved nil
+  "Flag to track if we've already moved a Brave browser window.")
+
 (defun gator/configure-window-by-class ()
+  "Configure windows by class, only moving the first Brave browser instance."
   (interactive)
   (pcase exwm-class-name
-    ("Brave-browser" (exwm-workspace-move-window 3))
+    ("Brave-browser"
+     (when (not gator/brave-window-moved)
+       (exwm-workspace-move-window 3)
+       (setq gator/brave-window-moved t)))
     ("org.wezfurlong.wezterm" (exwm-workspace-move-window 2))
     ("mpv" (exwm-floating-toggle-floating)
      (exwm-layout-toggle-mode-line))))
+
+;; Reset the flag when EXWM is restarted
+(defun gator/reset-brave-window-flag ()
+  "Reset the Brave window moved flag when EXWM starts."
+  (setq gator/brave-window-moved nil))
 
 ;; Desktop environment controls (brightness, volume, etc.)
 (use-package desktop-environment
@@ -500,22 +492,24 @@ fixed-pitch))
   (exwm-input-set-key (kbd "s-N") (lambda () (interactive) (gator/dunstctl "close-all")))
 
   ;; RANDR configuration - map workspaces to specific monitors
-  (setq exwm-randr-workspace-monitor-plist '(0 "DP-4"
-                                             1 "DP-4" ;; Primary emacs workspace
-                                             2 "DP-4" ;; Primary terminal workspace
+  (setq exwm-randr-workspace-monitor-plist '(0 "DP-1"
+                                             1 "DP-1" ;; Primary emacs workspace
+                                             2 "DP-1" ;; Primary terminal workspace
                                              3 "DP-2" ;; Primary browser workspace
-                                             4 "DP-4"
-                                             5 "DP-2"
+                                             4 "DP-1"
+                                             5 "DP-1"
                                              6 "DP-2"
                                              7 "DP-2"
                                              8 "DP-2"
                                              9 "DP-2"))
 
+
+
   ;; Hooks
   (add-hook 'exwm-randr-screen-change-hook
             (lambda ()
               (start-process-shell-command
-               "xrandr" nil "xrandr --output DP-4 --primary --auto --output DP-2 --right-of DP-4 --auto")))
+               "xrandr" nil "xrandr --output DP-1 --primary --auto --output DP-2 --right-of DP-4 --auto")))
 
   (add-hook 'exwm-init-hook #'gator/exwm-init-hook)
 
@@ -530,6 +524,9 @@ fixed-pitch))
 
   ;; Update panel indicator when workspace changes
   (add-hook 'exwm-workspace-switch-hook #'gator/send-polybar-exwm-workspace)
+
+  ;; reset brave window flag
+  (add-hook 'exwm-init-hook #'gator/reset-brave-window-flag)
 
   ;; Enable EXWM-RANDR first
   (exwm-randr-mode 1)
