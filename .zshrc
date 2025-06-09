@@ -113,5 +113,11 @@ if [ -d "$HOME/.emacs.d" ]; then
     export PATH="$HOME/.emacs.d/bin:$PATH"
 fi
 
+# check if _argocd file exists in the home directory and if so, source it 
+if [ -f "$HOME/_argocd" ]; then
+    source "$HOME/_argocd"
+fi
+
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+alias claude="/home/dkraklan/.claude/local/claude"
