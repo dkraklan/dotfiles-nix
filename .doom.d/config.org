@@ -555,7 +555,13 @@ Configuration for Polybar with EXWM.
     (1 "")
     (2 "")
     (3 "")
-    (4 "4")))
+    (4 "4")
+    (5 "")
+    (6 "6")
+    (7 "7")
+    (8 "8")
+
+        ))
 
 (defun gator/send-polybar-hook (module-name hook-index)
   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
