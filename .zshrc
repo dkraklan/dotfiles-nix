@@ -57,6 +57,64 @@ else
     )
 fi
 
+# Enhanced SSH function with better argument parsing
+ssh() {
+    if [[ -n "$TMUX" ]]; then
+        local hostname=""
+        local -a ssh_args=("$@")
+        
+        # Parse SSH arguments to find hostname
+        local i=1
+        while [[ $i -le ${#ssh_args[@]} ]]; do
+            case "${ssh_args[$i]}" in
+                -[1246AaCfGgKkMNnqsTtVvXxYy])
+                    # Options without arguments
+                    ;;
+                -[bcDEeFIiJLlmOopQRSWw])
+                    # Options with arguments, skip next argument too
+                    ((i++))
+                    ;;
+                -*)
+                    # Other options, might have arguments
+                    if [[ "${ssh_args[$i]}" == *"="* ]]; then
+                        # Option with = format (-oOption=value)
+                        continue
+                    fi
+                    ;;
+                *)
+                    # This should be the hostname
+                    hostname="${ssh_args[$i]}"
+                    break
+                    ;;
+            esac
+            ((i++))
+        done
+        
+        # Clean up hostname (remove user@ part, port, etc.)
+        hostname="${hostname##*@}"  # Remove user@
+        hostname="${hostname%%:*}"  # Remove :port
+        
+        if [[ -n "$hostname" ]]; then
+            # Store original window name
+            local original_name=$(tmux display-message -p '#W')
+            
+            # Set window name to hostname
+            tmux rename-window "$hostname"
+            
+            # Execute SSH
+            command ssh "$@"
+            
+            # Restore original name when SSH exits
+            tmux rename-window "$original_name"
+        else
+            # Couldn't parse hostname, just run SSH
+            command ssh "$@"
+        fi
+    else
+        # Not in tmux, just run regular SSH
+        command ssh "$@"
+    fi
+}
 
 source $ZSH/oh-my-zsh.sh
 
