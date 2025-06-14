@@ -41,6 +41,10 @@
       (:prefix ("b" . "buffer")
        :desc "Switch buffer using counsel" "B" #'counsel-switch-buffer))
 
+(map! :leader
+        (:prefix (" " . "find file")
+       :desc "Find file with fzf" "f" #'counsel-fzf))
+
 ;; Configure counsel to only show app names (not full paths) in app launcher
 (use-package! counsel
   :custom

@@ -70,6 +70,10 @@ Custom keybindings and keyboard shortcuts.
       (:prefix ("b" . "buffer")
        :desc "Switch buffer using counsel" "B" #'counsel-switch-buffer))
 
+(map! :leader
+        (:prefix (" " . "find file")
+       :desc "Find file with fzf" "f" #'counsel-fzf))
+
 #+end_src
 
 * Counsel Configuration
