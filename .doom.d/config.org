@@ -61,18 +61,13 @@ Custom keybindings and keyboard shortcuts.
 
 #+begin_src emacs-lisp
 ;; File finding with fzf
-(map! :leader
-      (:prefix ("f" . "file")
-       :desc "Find file with fzf" "f" #'counsel-fzf))
-
 ;; Buffer switching with counsel
 (map! :leader
       (:prefix ("b" . "buffer")
        :desc "Switch buffer using counsel" "B" #'counsel-switch-buffer))
 
 (map! :leader
-        (:prefix (" " . "find file")
-       :desc "Find file with fzf" "f" #'counsel-fzf))
+      :desc "Find file with fzf" "SPC" #'counsel-fzf)
 
 #+end_src
 
