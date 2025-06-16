@@ -163,6 +163,7 @@ else
     #docker command to show all containers but just the names and status
     alias dockps="sudo docker ps --format 'table {{.Names}}\t{{.Status}}'"
     alias godot="/home/dkraklan/Desktop/Godot_Versions/"
+    eval "$(direnv hook zsh)"
 fi
 
 
