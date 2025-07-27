@@ -59,27 +59,27 @@ inner.horizontal = 40
 inner.vertical =   40
 outer.left =       20
 outer.bottom =     20
-outer.top =        [{ monitor.main = 30 },70]
+outer.top =        [{ monitor.secondary = 30 },70]
 outer.right =      20
 
 
 [workspace-to-monitor-force-assignment]
 1 = 'main' #Primary Browser
-2 = 'main' # Terminal
-3 = 'main' # Emacs
-4 = 'secondary' # Signal/Slack 
+2 = 'secondary' #Chat
+3 = 'main' #Terminal
+4 = 'main' # Spotify
 5 = 'secondary' #Secondary Browser
-6 = 'spotify' #Obsidian
+6 = 'secondary' #Obsidian
 
 #Map signal
 [[on-window-detected]]
 if.app-id = 'org.whispersystems.signal-desktop'
-run = 'move-node-to-workspace 4'
+run = 'move-node-to-workspace 2'
 
 # Map slack
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = 'move-node-to-workspace 4'
+run = 'move-node-to-workspace 2'
 
 # Map iterm2  
 [[on-window-detected]]

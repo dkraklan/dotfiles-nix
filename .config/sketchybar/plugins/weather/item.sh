@@ -38,10 +38,8 @@ weather_details=(
 
 sketchybar 	--add item weather.icon right 								\
 						--set weather.icon "${weather_icon[@]}" 			\
-																													\
 						--add item weather.temp right 								\
 						--set weather.temp "${weather_temp[@]}" 			\
-																													\
 						--add item weather.details popup.weather.temp \
 						--set weather.details "${weather_details[@]}" \
 						--subscribe weather.temp mouse.entered 				\
