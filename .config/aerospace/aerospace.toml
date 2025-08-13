@@ -69,7 +69,7 @@ outer.right =      20
 3 = 'main' # Emacs
 4 = 'secondary' # Signal/Slack 
 5 = 'secondary' #Secondary Browser
-6 = 'spotify' #Obsidian
+6 = 'secondary' #Obsidian
 
 #Map signal
 [[on-window-detected]]

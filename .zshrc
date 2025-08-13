@@ -169,4 +169,3 @@ if [ -f "$HOME/_argocd" ]; then
 fi
 
 
-alias claude="/home/dkraklan/.claude/local/claude"
