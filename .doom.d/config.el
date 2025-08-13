@@ -40,6 +40,43 @@
 (map! :leader
       :desc "Find file with fzf" "SPC" #'counsel-fzf)
 
+(if (eq system-type 'darwin)
+    (defvar tailscale-path "/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+      "Path to Tailscale executable on macOS.")
+  (defvar tailscale-path "tailscale"
+    "Path to Tailscale executable on other systems."))
+
+(defun tailscale--switch (user)
+  "Internal helper to switch to USER Tailscale account and show result."
+  (let* ((cmd (format "%s switch %s" tailscale-path user))
+         (result (string-trim (shell-command-to-string cmd))))
+    (message "%s" result)))
+
+(defun tailscale-switch-work ()
+  "Switch Tailscale profile to work."
+  (interactive)
+  (tailscale--switch "dylan@path.net"))
+
+(defun tailscale-switch-personal ()
+  "Switch Tailscale profile to personal."
+  (interactive)
+  (tailscale--switch "dylan@dkraklan.me"))
+
+(defun tailscale-up ()
+  "bring tailscale up."
+  (interactive)
+  (let* ((cmd (format "%s up" tailscale-path))
+         (result (string-trim (shell-command-to-string cmd))))
+    (message "%s" result)))
+
+
+(defun tailscale-down ()
+  "bring tailscale down."
+  (interactive)
+  (let* ((cmd (format "%s down" tailscale-path))
+         (result (string-trim (shell-command-to-string cmd))))
+    (message "%s" result)))
+
 ;; Configure counsel to only show app names (not full paths) in app launcher
 (use-package! counsel
   :custom
@@ -157,6 +194,13 @@ capture was not aborted."
       )
 ;; save files when we org-refile
 (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+(setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "BUG(b)"
+           "|" "DONE(d)" "KILL(k)")
+ (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
+ (sequence "|" "OKAY(o)" "YES(y)" "NO(n)"))
+
+      )
 
 ;; Org Capture templates
 ;; Template breakdown:
@@ -278,6 +322,14 @@ fixed-pitch))
               ;; Either form below works—no extra quote for the function:
               ("C-y" . copilot-accept-completion)
               ("C-<tab>" . copilot-accept-completion-by-word)))
+
+;; Configure Copilot AI code completion
+(use-package! claude-code
+  :bind-keymap ("C-c c" . claude-code-command-map)
+  :config
+  (setq claude-code-terminal-backend 'vterm)
+  (claude-code-mode)
+)
 
 ;; Disable auto-formatting in specific modes
 (setq +format-on-save-disabled-modes
@@ -539,6 +591,8 @@ fixed-pitch))
   ;; Finally enable EXWM
   (exwm-enable))
 
+(unless (eq system-type 'darwin)
+
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 ;; don't need to run cleanup after indexing for gmail
 (setq mu4e-index-cleanup nil
@@ -593,3 +647,7 @@ fixed-pitch))
     (:name "Today's messages" :query "date:today..now" :key ?t)
     (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
     (:name "Messages with images" :query "mime:image/*" :key ?p)))
+)
+
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(undecorated-round . t)))

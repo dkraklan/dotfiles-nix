@@ -69,3 +69,8 @@
 (package! desktop-environment )
 
 (package! org-modern)
+
+(package! claude-code
+  :recipe (:host github
+           :repo "stevemolitor/claude-code.el"
+           ))

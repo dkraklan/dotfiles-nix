@@ -70,7 +70,46 @@ Custom keybindings and keyboard shortcuts.
       :desc "Find file with fzf" "SPC" #'counsel-fzf)
 
 #+end_src
+* Custom Functions
+#+begin_src emacs-lisp
+(if (eq system-type 'darwin)
+    (defvar tailscale-path "/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+      "Path to Tailscale executable on macOS.")
+  (defvar tailscale-path "tailscale"
+    "Path to Tailscale executable on other systems."))
 
+(defun tailscale--switch (user)
+  "Internal helper to switch to USER Tailscale account and show result."
+  (let* ((cmd (format "%s switch %s" tailscale-path user))
+         (result (string-trim (shell-command-to-string cmd))))
+    (message "%s" result)))
+
+(defun tailscale-switch-work ()
+  "Switch Tailscale profile to work."
+  (interactive)
+  (tailscale--switch "dylan@path.net"))
+
+(defun tailscale-switch-personal ()
+  "Switch Tailscale profile to personal."
+  (interactive)
+  (tailscale--switch "dylan@dkraklan.me"))
+
+(defun tailscale-up ()
+  "bring tailscale up."
+  (interactive)
+  (let* ((cmd (format "%s up" tailscale-path))
+         (result (string-trim (shell-command-to-string cmd))))
+    (message "%s" result)))
+
+
+(defun tailscale-down ()
+  "bring tailscale down."
+  (interactive)
+  (let* ((cmd (format "%s down" tailscale-path))
+         (result (string-trim (shell-command-to-string cmd))))
+    (message "%s" result)))
+
+  #+end_src
 * Counsel Configuration
 Customizations for ivy/counsel functionality.
 
@@ -228,6 +267,18 @@ Settings for org-mode, including files, appearance, and behavior.
 
 #+RESULTS:
 | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (text-scale-set 2) (visual-fill-column-mode) (setq-default visual-fill-column-center-text t) (setq display-line-numbers nil)) nil] | er/add-org-mode-expansions | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | #[nil ((org-indent-mode) (variable-pitch-mode 1) (auto-fill-mode -1) (visual-line-mode 1) (text-scale-set 2) (visual-fill-column-mode) (progn (set-default 'visual-fill-column-center-text t)) (setq display-line-numbers nil)) nil] | #[(&rest _) ((progn (let ((tail '(after-change-major-mode-hook))) (while tail (let ((hook (car tail))) (let ((tail (list #'(lambda (&rest _) (if (derived-mode-p 'org-mode) (progn (setq tab-width 8))))))) (while tail (let ((func (car tail))) (add-hook hook func nil t) (setq tail (cdr tail))))) (setq tail (cdr tail)))))) (add-hook 'save-place-after-find-file-hook #'+org-make-last-point-visible-h nil t)) ((hook . org-mode-hook))] | +lookup--init-org-mode-handlers-h | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | doom-disable-show-paren-mode-h | doom-disable-show-trailing-whitespace-h | org-appear-mode | org-fancy-priorities-mode | org-superstar-mode | evil-org-mode | org-eldoc-load | toc-org-enable | flyspell-mode | embrace-org-mode-hook | +literate-enable-recompile-h |
+** Todo Keyword
+#+begin_src emacs-lisp
+
+(setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "BUG(b)"
+           "|" "DONE(d)" "KILL(k)")
+ (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
+ (sequence "|" "OKAY(o)" "YES(y)" "NO(n)"))
+
+      )
+
+
+#+end_src
 
 ** Org Capture Templates
 Templates for quickly capturing notes, tasks, and journal entries.
@@ -367,9 +418,9 @@ fixed-pitch))
 https://sophiebos.io/posts/prettifying-emacs-org-mode/
 a lot of my rice and coding sections are based off this article.
 
-* Copilot Configuration
+* AI
+** Copliot
 Setup for GitHub Copilot integration.
-
 #+begin_src emacs-lisp
 ;; Configure Copilot AI code completion
 (use-package! copilot
@@ -379,7 +430,16 @@ Setup for GitHub Copilot integration.
               ("C-y" . copilot-accept-completion)
               ("C-<tab>" . copilot-accept-completion-by-word)))
 #+end_src
-
+** Claude Code
+#+begin_src emacs-lisp
+;; Configure Copilot AI code completion
+(use-package! claude-code
+  :bind-keymap ("C-c c" . claude-code-command-map)
+  :config
+  (setq claude-code-terminal-backend 'vterm)
+  (claude-code-mode)
+)
+#+end_src
 * Formatting Configuration
 Settings for code formatting behavior.
 
@@ -690,6 +750,8 @@ The core EXWM configuration.
 we use mbsync (isync) to sync our email. Google is getting pretty crazy about auth, but it seems like for the time being since we have 2fa enabled on the account we can use an app password instead of our actual account password.
 
 #+BEGIN_SRC emacs-lisp
+(unless (eq system-type 'darwin)
+
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 ;; don't need to run cleanup after indexing for gmail
 (setq mu4e-index-cleanup nil
@@ -744,5 +806,11 @@ we use mbsync (isync) to sync our email. Google is getting pretty crazy about au
     (:name "Today's messages" :query "date:today..now" :key ?t)
     (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
     (:name "Messages with images" :query "mime:image/*" :key ?p)))
-
+)
 #+END_SRC
+* MACos Config
+#+begin_src emacs-lisp
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(undecorated-round . t)))
+
+#+end_src
