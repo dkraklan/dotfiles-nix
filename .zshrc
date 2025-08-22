@@ -19,7 +19,7 @@ if [[ "$(uname)" != "Darwin" ]]; then
     plugins=(
         git
         poetry-env
-        zsh-autosuggestions
+        # zsh-autosuggestions
         zsh-syntax-highlighting
         docker
     	rust
@@ -169,3 +169,8 @@ if [ -f "$HOME/_argocd" ]; then
 fi
 
 
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/dkraklan/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
