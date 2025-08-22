@@ -133,6 +133,12 @@ Configure the workspace display in the minibuffer.
   (run-with-idle-timer 0.5 nil #'display-workspaces-in-minibuffer)
   (+workspace/display))
 #+end_src
+* Misc Mode configs
+** Markdown Mode
+Fontifying code blocks is insanely slow
+#+begin_src  emacs-lisp
+(setq markdown-fontify-code-blocks-natively nil)
+#+end_src
 
 * Org-roam Configuration
 Setup for org-roam knowledge management system.

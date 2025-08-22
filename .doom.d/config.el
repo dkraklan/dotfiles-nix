@@ -91,6 +91,8 @@
   (run-with-idle-timer 0.5 nil #'display-workspaces-in-minibuffer)
   (+workspace/display))
 
+(setq markdown-fontify-code-blocks-natively nil)
+
 (use-package org-roam
   :ensure t
   :custom
