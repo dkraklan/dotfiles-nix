@@ -24,42 +24,65 @@
   community.general.pacman:
     update_cache: yes
 
-- name: Install packages
+- name: Install Base setup(Desktop, etc)
   community.general.pacman:
     name: "{{ item }}"
     state: present
   with_items:
     - cmake
-    - htop
-    - curl
-    - git
-    - mtr
     - ttf-fira-code
     - ttf-jetbrains-mono
-    - ispell
-    - fzf
-    - docker
     - base-devel # needed for yay
     - xdg-desktop-portal
     - xdg-desktop-portal-gtk
-    - tailscale
-    - wezterm
-    - starship
-    - neovim
-    - zsh
-    - zsh-autocomplete
-    - tmux
-    - npm
-    - zsh-syntax-highlighting
-    - python-poetry
     - bind
-    - containerd
     - fuse-overlayfs
     - iptables-nft
     - btrfs-progs
     - keyd
+    - hyprland
+    - hyprpaper
+    - hyprlock
+    - hypridle
+    - uwsm
+
+- name: Install common tools / apps
+  community.general.pacman:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - tailscale
+    - htop
+    - curl
+    - git
+    - mtr
+
+- name: Install Terminal packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - zsh
+    - zsh-autocomplete
+    - tmux
+    - zsh-syntax-highlighting
+    - wezterm
+    - starship
+    - ispell
+    - fzf
+
+- name: Install development packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-poetry
     - python-pip
     - python-pipx
+    - containerd
+    - npm
+    - neovim
+    - docker
 
 - name: Install yay from AUR
   kewlfft.aur.aur:
