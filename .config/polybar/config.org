@@ -81,18 +81,16 @@ ramp-coreload-6 = ▇
 
 [module/date]
 type = internal/date
-interval = 5
+interval = 1
 
-date = "%a %b %e"
-date-alt = "%A %B %d %Y"
+date = %a %b %d
+date-alt = %A %B %d %Y
 
-time = %l:%M %p
+time = %I:%M %p
 time-alt = %H:%M:%S
 
-format-prefix-foreground = ${colors.foreground-alt}
-format-underline = ${colors.underline-1}
-
 label = %date% %time%
+
 
 [module/battery]
 type = internal/battery

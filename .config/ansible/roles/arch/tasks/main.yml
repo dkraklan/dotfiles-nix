@@ -1,0 +1,113 @@
+---
+- name: Configure extra repository
+  become: yes
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - extra repo"
+    insertafter: '^#\[extra-testing\]'
+    block: |
+      [extra]
+      Include = /etc/pacman.d/mirrorlist
+
+- name: Configure multilib repository
+  become: yes
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - multilib repo"
+    insertafter: '^#\[multilib-testing\]'
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+
+- name: Refresh pacman database
+  become: yes
+  community.general.pacman:
+    update_cache: yes
+
+- name: Install packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cmake
+    - htop
+    - curl
+    - git
+    - mtr
+    - ttf-fira-code
+    - ttf-jetbrains-mono
+    - ispell
+    - fzf
+    - docker
+    - base-devel # needed for yay
+    - xdg-desktop-portal
+    - xdg-desktop-portal-gtk
+    - tailscale
+    - wezterm
+    - starship
+    - neovim
+    - zsh
+    - zsh-autocomplete
+    - tmux
+    - npm
+    - zsh-syntax-highlighting
+    - python-poetry
+    - bind
+    - containerd
+    - fuse-overlayfs
+    - iptables-nft
+    - btrfs-progs
+    - keyd
+    - python-pip
+    - python-pipx
+
+- name: Install yay from AUR
+  kewlfft.aur.aur:
+    name: yay
+    use: makepkg
+    state: present
+  become: yes
+  become_user: aur_builder
+
+- name: Create the `aur_builder` user
+  become: yes
+  ansible.builtin.user:
+    name: aur_builder
+    create_home: yes
+    group: wheel
+
+- name: Allow the `aur_builder` user to run `sudo pacman` without a password
+  become: yes
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: yes
+    mode: 0644
+    validate: 'visudo -cf %s'
+
+- name: Install packages using yay
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ item }}"
+    state: present
+  become: yes
+  become_user: aur_builder
+  loop:
+    - synology-drive
+    - python312
+
+- name: Run steam tasks
+  ansible.builtin.include_tasks:
+    file: steam.yml
+
+- name: Clone TPM (Tmux Plugin Manager)
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "/home/dkraklan/.config/tmux/plugins/tpm"
+    version: master
+    update: yes
+    force: no
+
+- name: Upgrade the system
+  community.general.pacman:
+    upgrade: true

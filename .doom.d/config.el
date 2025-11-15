@@ -13,7 +13,11 @@
 (setq display-line-numbers-type t)
 
 ;; Set transparency for the Emacs frame
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90)) ;; used on x11 builds
+(add-to-list 'default-frame-alist '(alpha-background . 90)) ;; used on GTK builds
+
+;; had to add this on arch as syntax highlighting wasn't working.
+(global-font-lock-mode 1)
 
 ;; (when (member "Roboto" (font-family-list))
 ;;   ;; setting this breaks the whichkey menu for some reason
@@ -346,11 +350,11 @@ fixed-pitch))
 
 ;; Godot game development configuration
 ;; Treesitter grammar files
-(setq treesit-extra-load-path '("/home/dkraklan/Desktop/Godot_Versions/tree-sitter-gdscript/src/"))
+;;(setq treesit-extra-load-path '("/home/dkraklan/Desktop/Godot_Versions/tree-sitter-gdscript/src/"))
 ;; Path to godot executable
-(setq gdscript-godot-executable "/home/dkraklan/Desktop/Godot_Versions/Godot_v4.4.1-stable_linux.x86_64")
+;;(setq gdscript-godot-executable "/home/dkraklan/Desktop/Godot_Versions/Godot_v4.4.1-stable_linux.x86_64")
 ;; path to docs
-(setq gdscript-docs-local-path "/home/dkraklan/Desktop/Godot_Versions/docs/4.4/")
+;;(setq gdscript-docs-local-path "/home/dkraklan/Desktop/Godot_Versions/docs/4.4/")
 
 ;; Python poetry fix
 ;; We've disabled this hook as otherwise it loads the venv for every python file, it also seems to load every poetry env for every project that projectile is aware of.
@@ -485,171 +489,54 @@ fixed-pitch))
 (defun gator/dunstctl (command)
   (start-process-shell-command "dunstctl" nil (concat "dunstctl " command)))
 
-;; EXWM configuration
-(use-package exwm
-  :config
-  ;; requires
-  (require 'exwm-randr)
-  ;; (require 'exwm-systemtray)
-
-  ;; Set the default number of workspaces
-  (setq exwm-workspace-number 10)
-
-  ;; These keys should always pass through to Emacs
-  (setq exwm-input-prefix-keys
-        '(?\C-x
-          ?\C-u
-          ?\C-h
-          ?\M-x
-          ?\M-`
-          ?\M-&
-          ?\M-:
-          ?\C-\M-j  ;; Buffer list
-          ?\C-\ ))  ;; Ctrl+Space
-
-  ;; Explicitly set char mode to line mode keybinding
-  (define-key exwm-mode-map (kbd "C-c C-k") 'exwm-input-release-keyboard)
-
-  ;; Ctrl+Q will enable the next key to be sent directly
-  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-  ;; Set up global key bindings
-  (setq exwm-input-global-keys
-        `(
-          ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\s-r] . exwm-reset)
-
-          ;; Move between windows
-          ([s-left] . windmove-left)
-          ([s-right] . windmove-right)
-          ([s-up] . windmove-up)
-          ([s-down] . windmove-down)
-
-          ;; Launch applications via shell command
-          ([?\s-&] . (lambda (command)
-                       (interactive (list (read-shell-command "$ ")))
-                       (start-process-shell-command command nil command)))
-
-          ;; Switch workspace
-          ([?\s-w] . exwm-workspace-switch)
-
-          ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
-          ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))))
-
-  ;; Additional keybindings for applications and controls
-  (exwm-input-set-key (kbd "s-SPC") 'counsel-linux-app)
-  (exwm-input-set-key (kbd "s-f") 'exwm-layout-toggle-fullscreen)
-  ;; Line mode to char mode key binding
-  (exwm-input-set-key (kbd "C-c C-q") 'exwm-input-grab-keyboard)
-  ;; Char mode to line mode key binding
-  (exwm-input-set-key (kbd "C-c C-k") 'exwm-input-release-keyboard)
-  (exwm-input-set-key (kbd "s-n") (lambda () (interactive) (gator/dunstctl "history-pop")))
-  (exwm-input-set-key (kbd "s-N") (lambda () (interactive) (gator/dunstctl "close-all")))
-
-  ;; RANDR configuration - map workspaces to specific monitors
-  (setq exwm-randr-workspace-monitor-plist '(0 "DP-1"
-                                             1 "DP-1" ;; Primary emacs workspace
-                                             2 "DP-1" ;; Primary terminal workspace
-                                             3 "DP-2" ;; Primary browser workspace
-                                             4 "DP-1"
-                                             5 "DP-1"
-                                             6 "DP-2"
-                                             7 "DP-2"
-                                             8 "DP-2"
-                                             9 "DP-2"))
-
-
-
-  ;; Hooks
-  (add-hook 'exwm-randr-screen-change-hook
-            (lambda ()
-              (start-process-shell-command
-               "xrandr" nil "xrandr --output DP-1 --primary --auto --output DP-2 --right-of DP-4 --auto")))
-
-  (add-hook 'exwm-init-hook #'gator/exwm-init-hook)
-
-  ;; When window "class" updates, use it to set the buffer name
-  (add-hook 'exwm-update-class-hook #'gator/exwm-update-class)
-
-  ;; When window title updates, use it to set the buffer name
-  (add-hook 'exwm-update-title-hook #'gator/exwm-update-title)
-
-  ;; When a window is created, check the class-name and apply settings
-  (add-hook 'exwm-manage-finish-hook #'gator/configure-window-by-class)
-
-  ;; Update panel indicator when workspace changes
-  (add-hook 'exwm-workspace-switch-hook #'gator/send-polybar-exwm-workspace)
-
-  ;; reset brave window flag
-  (add-hook 'exwm-init-hook #'gator/reset-brave-window-flag)
-
-  ;; Enable EXWM-RANDR first
-  (exwm-randr-mode 1)
-
-  ;; Finally enable EXWM
-  (exwm-enable))
-
 (unless (eq system-type 'darwin)
+  (when (locate-library "mu4e") ;; Only run if mu4e is installed
+    (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-;; don't need to run cleanup after indexing for gmail
-(setq mu4e-index-cleanup nil
-      ;; because gmail uses labels as folders we can use lazy check since
-      ;; messages don't really "move"
-      mu4e-index-lazy-check t)
-(use-package! mu4e
-  :ensure nil
-  ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
-  :defer 20 ; Wait until 20 seconds after startup
-  :config
-  ;; This is set to 't' to avoid mail syncing issues when using mbsync
-  (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-search-query-in-title t)
-  ;; Refresh mail using isync every 10 minutes
-  (setq mu4e-update-interval (* 10 60))
-  (setq mu4e-get-mail-command "mbsync -a")
-  (setq mu4e-maildir "~/Mail")
+    (setq mu4e-index-cleanup nil
+          mu4e-index-lazy-check t)
 
-  (setq user-mail-address "dylan@dkraklan.me"
-        user-full-name "Dylan Kraklan")
-  (setq auth-sources '("~/.authinfo.gpg"))
+    (use-package! mu4e
+      :ensure nil
+      :defer 20
+      :config
+      (setq mu4e-change-filenames-when-moving t
+            mu4e-search-query-in-title t
+            mu4e-update-interval (* 10 60)
+            mu4e-get-mail-command "mbsync -a"
+            mu4e-maildir "~/Mail"
 
-  ;; Fix SMTP settings - the key changes are here
-  (setq send-mail-function 'smtpmail-send-it
-        message-send-mail-function 'smtpmail-send-it
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-user "dylan@dkraklan.me"
-        ;; Use starttls instead of SSL for port 587
-        smtpmail-smtp-service 465
-        smtpmail-stream-type 'ssl
-        ;; Debug settings (temporarily enable for troubleshooting)
-        smtpmail-debug-info t
-        smtpmail-debug-verb t)
+            user-mail-address "dylan@dkraklan.me"
+            user-full-name "Dylan Kraklan"
+            auth-sources '("~/.authinfo.gpg")
 
-  ;; For Gmail, since it handles sent mail automatically
-  (setq mu4e-sent-messages-behavior 'delete)
+            send-mail-function 'smtpmail-send-it
+            message-send-mail-function 'smtpmail-send-it
+            smtpmail-smtp-server "smtp.gmail.com"
+            smtpmail-smtp-user "dylan@dkraklan.me"
+            smtpmail-smtp-service 465
+            smtpmail-stream-type 'ssl
+            smtpmail-debug-info t
+            smtpmail-debug-verb t
 
-  (setq mu4e-maildir-shortcuts
-        '((:maildir "/Inbox"    :key ?i)
-          (:maildir "/[Gmail]/Sent Mail" :key ?s)
-          (:maildir "/[Gmail]/Trash"     :key ?t)
-          (:maildir "/[Gmail]/Drafts"    :key ?d)
-          (:maildir "/[Gmail]/All Mail"  :key ?a)
-          (:maildir "/[Gmail]/Spam"      :key ?S))))
+            mu4e-sent-messages-behavior 'delete
 
-;; run mu4e in the background to sync mail
-(mu4e t)
-;; bookmarks
-(setq mu4e-bookmarks
-  '((:name "Unread messages" :query "flag:unread AND NOT flag:trashed AND NOT maildir:/[Gmail]/Spam" :key ?i)
-    (:name "Today's messages" :query "date:today..now" :key ?t)
-    (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
-    (:name "Messages with images" :query "mime:image/*" :key ?p)))
-)
+            mu4e-maildir-shortcuts
+            '((:maildir "/Inbox"               :key ?i)
+              (:maildir "/[Gmail]/Sent Mail"   :key ?s)
+              (:maildir "/[Gmail]/Trash"       :key ?t)
+              (:maildir "/[Gmail]/Drafts"      :key ?d)
+              (:maildir "/[Gmail]/All Mail"    :key ?a)
+              (:maildir "/[Gmail]/Spam"        :key ?S))
+
+            mu4e-bookmarks
+            '((:name "Unread messages" :query "flag:unread AND NOT flag:trashed AND NOT maildir:/[Gmail]/Spam" :key ?i)
+              (:name "Today's messages" :query "date:today..now" :key ?t)
+              (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
+              (:name "Messages with images" :query "mime:image/*" :key ?p))))
+
+    ;; run mu4e in the background (non-interactively)
+    (mu4e t)))
 
 (when (eq system-type 'darwin)
   (add-to-list 'default-frame-alist '(undecorated-round . t)))

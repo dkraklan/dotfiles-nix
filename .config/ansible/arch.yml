@@ -1,0 +1,6 @@
+- name: Apply base system configuration
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  roles:
+    - arch

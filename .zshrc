@@ -14,27 +14,67 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 
 if [[ "$(uname)" != "Darwin" ]]; then
-    # Linux config
-    source .oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
+    ZSH_CUSTOM=${ZSH_CUSTOM:-~/.oh-my-zsh/custom}
+
+    # Ensure OMZ paths are set
+    export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
+    export ZSH_CUSTOM="${ZSH_CUSTOM:-$ZSH/custom}"
+
+    # Symlink AUR-installed plugins into OMZ custom/plugins if not present
+    if [[ ! -e "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" && -e "/usr/share/zsh/plugins/zsh-syntax-highlighting" ]]; then
+    ln -s /usr/share/zsh/plugins/zsh-syntax-highlighting \
+        "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+    fi
+
+    if [[ ! -e "$ZSH_CUSTOM/plugins/zsh-autocomplete" && -e "/usr/share/zsh/plugins/zsh-autocomplete" ]]; then
+    ln -s /usr/share/zsh/plugins/zsh-autocomplete \
+        "$ZSH_CUSTOM/plugins/zsh-autocomplete"
+    fi
+
+    # Let OMZ load them; do NOT manually `source` these files.
     plugins=(
-        git
-        poetry-env
-        # zsh-autosuggestions
-        zsh-syntax-highlighting
-        docker
-    	rust
-        kubectl
+    git
+    poetry-env
+    zsh-autocomplete
+    docker
+    rust
+    kubectl
+    zsh-syntax-highlighting  # keep this LAST
     )
+
+
     export PATH="/home/dkraklan/.local/bin:$PATH"
-    eval "$(starship init zsh)"
-    export GOPATH=~/go
-    export PATH=$GOPATH/bin:$PATH
-    #docker command to show all containers but just the names and status
-    alias dockps="sudo docker ps --format 'table {{.Names}}\t{{.Status}}'"
-    alias godot="/home/dkraklan/Desktop/Godot_Versions/"
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    alias make="/opt/make-4.4/bin/make"
-    eval "$(direnv hook zsh)"
+
+    ## Go
+    if [[ -e "~/go" ]]; then
+	export GOPATH=~/go
+	export PATH=$GOPATH/bin:$PATH
+    fi
+
+    ## Godot 
+    if [[ -e "/home/dkraklan/Desktop/Godot_Versions" ]]; then
+	export PATH="/home/dkraklan/Desktop/Godot_Versions:$PATH"
+    fi
+
+    ## Linuxbrew 
+    if [[ -e "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+	
+    ## use the latest make version 
+    if [[ -e "/opt/make-4.4/bin" ]]; then
+	export PATH="/opt/make-4.4/bin:$PATH"
+    fi
+
+    ## Starship.rs
+    if command -v starship &> /dev/null; then
+        eval "$(starship init zsh)"
+    fi
+
+    if command -v direnv &> /dev/null; then
+        eval "$(direnv hook zsh)"
+    fi
 
 else
     #Macos config
@@ -71,6 +111,8 @@ else
 
 fi
 
+
+alias dockps="sudo docker ps --format 'table {{.Names}}\t{{.Status}}'"
 
 DISABLE_AUTO_TITLE="true"
 
@@ -161,6 +203,10 @@ fi
 #check if ~/.emacs.d/ exists and if so, add it to the pathdb
 if [ -d "$HOME/.emacs.d" ]; then
     export PATH="$HOME/.emacs.d/bin:$PATH"
+fi
+
+if [ -d "$HOME/.config/emacs" ]; then
+    export PATH="$HOME/.config/emacs/bin:$PATH"
 fi
 
 # check if _argocd file exists in the home directory and if so, source it 
