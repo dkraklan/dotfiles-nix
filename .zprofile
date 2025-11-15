@@ -1,8 +1,5 @@
-if [[ -z $DISPLAY ]] && [[ $(tty) == /dev/tty1 ]]; then
-	export GBM_BACKEND=nvidia-drm
-	export __GLX_VENDOR_LIBRARY_NAME=nvidia
-	export LIBVA_DRIVER_NAME=nvidia
-	export WLR_NO_HARDWARE_CURSORS=1
-	export WLR_RENDERER=vulkan
-	exec Hyprland
+# Start a UWSM-managed Hyprland session on TTY1
+if uwsm check may-start; then
+    exec uwsm start hyprland.desktop
 fi
+
