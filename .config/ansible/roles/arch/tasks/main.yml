@@ -45,6 +45,31 @@
     - hyprlock
     - hypridle
     - uwsm
+    - pacman-contrib
+
+- name: Install pacman-contrib
+  pacman:
+    name: pacman-contrib
+    state: present
+
+- name: Enable and start paccache timer
+  systemd:
+    name: paccache.timer
+    enabled: true
+    state: started
+- name: Configure paccache to keep only 1 version
+  copy:
+    dest: /etc/conf.d/pacman-contrib
+    content: |
+      PACCACHE_ARGS='-rk1'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart paccache timer to apply config
+  systemd:
+    name: paccache.timer
+    state: restarted
 
 - name: Install common tools / apps
   community.general.pacman:
@@ -118,6 +143,8 @@
   loop:
     - synology-drive
     - python312
+    - swaylock-effects
+
 
 - name: Run steam tasks
   ansible.builtin.include_tasks:
