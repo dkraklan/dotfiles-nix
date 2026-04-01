@@ -11,7 +11,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 ]
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -59,7 +59,7 @@ inner.horizontal = 40
 inner.vertical =   40
 outer.left =       20
 outer.bottom =     20
-outer.top =        [{ monitor.main = 30 },70]
+outer.top =        [{ monitor.main = 70 },30]
 outer.right =      20
 
 
@@ -159,7 +159,7 @@ alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
 # alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
 # alt-b = 'workspace B'
-# alt-c = 'workspace C'
+alt-c = 'workspace C' #Claude
 # alt-d = 'workspace D'
 # alt-e = 'workspace E'
 # alt-f = 'workspace F'
@@ -192,7 +192,7 @@ cmd-shift-8 = 'move-node-to-workspace 8'
 cmd-shift-9 = 'move-node-to-workspace 9'
 # cmd-shift-a = 'move-node-to-workspace A'
 # alt-shift-b = 'move-node-to-workspace B'
-# alt-shift-c = 'move-node-to-workspace C'
+cmd-shift-c = 'move-node-to-workspace C'
 # alt-shift-d = 'move-node-to-workspace D'
 # alt-shift-e = 'move-node-to-workspace E'
 # alt-shift-f = 'move-node-to-workspace F'

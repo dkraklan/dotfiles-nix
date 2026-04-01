@@ -65,21 +65,21 @@ outer.right =      20
 
 [workspace-to-monitor-force-assignment]
 1 = 'main' #Primary Browser
-2 = 'secondary' #Chat
-3 = 'secondary' #Terminal
-4 = 'primary' # Spotify
+2 = 'main' # Terminal
+3 = 'main' # Emacs
+4 = 'secondary' # Signal/Slack 
 5 = 'secondary' #Secondary Browser
-6 = 'primary' #Obsidian
+6 = 'secondary' #Obsidian
 
 #Map signal
 [[on-window-detected]]
 if.app-id = 'org.whispersystems.signal-desktop'
-run = 'move-node-to-workspace 2'
+run = 'move-node-to-workspace 4'
 
 # Map slack
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = 'move-node-to-workspace 2'
+run = 'move-node-to-workspace 4'
 
 # Map iterm2  
 [[on-window-detected]]
