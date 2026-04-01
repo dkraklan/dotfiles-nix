@@ -116,6 +116,16 @@
  :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")
  :unnarrowed t)
         ))
+  (org-roam-dailies-capture-templates
+   '(("d" "default" entry
+      "* %?"
+      :target (file+head "%<%Y-%m-%d>.org"
+                         "#+title: %<%Y-%m-%d>\n"))
+     ("t" "todo" entry
+      "* TODO %?\nSCHEDULED: %t"
+      :target (file+head+olp "%<%Y-%m-%d>.org"
+                             "#+title: %<%Y-%m-%d>\n"
+                             ("Tasks")))))
   :config
   (require 'org-roam-dailies)
   (org-roam-setup))
@@ -135,25 +145,30 @@
 
 (defun my/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project")))
+  (setq org-agenda-files
+        (delete-dups
+         (append
+          (my/org-roam-list-notes-by-tag "Project")
+          (file-expand-wildcards
+           (concat (file-name-as-directory
+                    (expand-file-name "daily" org-roam-directory))
+                   "*.org"))))))
 
 ;; Build the agenda list the first time for the session
 (my/org-roam-refresh-agenda-list)
 
+;; Hook to auto-add captured project files to org-agenda-files
 (defun my/org-roam-project-finalize-hook ()
   "Adds the captured project file to `org-agenda-files' if the
 capture was not aborted."
-
-  ;; Add project file to the agenda list if the capture was confirmed
   (unless org-note-abort
     (with-current-buffer (org-capture-get :buffer)
       (add-to-list 'org-agenda-files (buffer-file-name)))))
 
+;; Capture a TODO into a Project-tagged roam node's Tasks heading
 (defun my/org-roam-capture-task ()
   (interactive)
-  ;; Add the project file to the agenda after capture is finished
   (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-  ;; Capture the new task, creating the project file if necessary
   (org-roam-capture- :node (org-roam-node-read
                             nil
                             (my/org-roam-filter-by-tag "Project"))
@@ -161,20 +176,14 @@ capture was not aborted."
                                    :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
                                                           "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
                                                           ("Tasks"))))))
-  ;; Capture a new agenda item for today
-(defun my/org-roam-capture-agenda ()
+
+;; Capture a TODO into today's org-roam daily file
+(defun my/org-roam-capture-daily-todo ()
+  "Capture a TODO into today's org-roam daily file under a Tasks heading."
   (interactive)
-  ;; Add the project file to the agenda after capture is finished
-  (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-  ;; Capture the new task, creating the project file if necessary
-  (org-roam-capture- :node (org-roam-node-read
-                            nil
-                            (my/org-roam-filter-by-tag "Project"))
-                     :templates '(("a" "agenda" plain "** TODO %?\nSCHEDULED: %t"
-                                   :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                          "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
-                                                          ("Tasks"))))))
-;; Define the keybinding using Doom's map! macro
+  (org-roam-dailies-capture-today nil "t"))
+
+;; Keybindingj
 (map! :leader
       (:prefix ("n" . "notes")
        (:prefix ("r" . "roam")
@@ -182,7 +191,7 @@ capture was not aborted."
 (map! :leader
       (:prefix ("n" . "notes")
        (:prefix ("r" . "roam")
-        :desc "Capture task with schedule to project" "a" #'my/org-roam-capture-agenda)))
+        :desc "Capture TODO to daily" "a" #'my/org-roam-capture-daily-todo)))
 
 ;; Org mode files and directories
 ;; (setq org-agenda-files '("~/SynologyDrive/Documents/org/tasks" "~/SynologyDrive/Documents/org/roam"))
@@ -321,21 +330,12 @@ fixed-pitch))
 
 (with-eval-after-load 'org (global-org-modern-mode))
 
-;; Configure Copilot AI code completion
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ;; Either form below works—no extra quote for the function:
-              ("C-y" . copilot-accept-completion)
-              ("C-<tab>" . copilot-accept-completion-by-word)))
-
-;; Configure Copilot AI code completion
-(use-package! claude-code
-  :bind-keymap ("C-c c" . claude-code-command-map)
+(use-package! agent-shell
+  :commands (agent-shell)
   :config
-  (setq claude-code-terminal-backend 'vterm)
-  (claude-code-mode)
-)
+  ;; Use login-based auth (picks up your existing claude CLI session)
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication :login t)))
 
 ;; Disable auto-formatting in specific modes
 (setq +format-on-save-disabled-modes
@@ -347,6 +347,13 @@ fixed-pitch))
         html-mode
         mhtml-mode
         web-mode-hook)) ; doesn't need a formatter
+
+(after! lsp-ui
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-show-with-cursor t
+        lsp-ui-doc-show-with-mouse t
+        lsp-ui-doc-delay 0.2
+        lsp-ui-doc-position 'at-point)) ;; or 'top 'bottom 'left 'right
 
 ;; Godot game development configuration
 ;; Treesitter grammar files

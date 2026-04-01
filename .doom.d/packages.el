@@ -59,18 +59,11 @@
 ;; (package! org-roam
 ;;   :pin "425d53d56d0d338c781741df87824b1bfe7f88bc")
 
-(package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
-
 (package! ob-restclient)
 
-;; EXWM
-(package! exwm)
-(package! desktop-environment )
 
 (package! org-modern)
 
-(package! claude-code
-  :recipe (:host github
-           :repo "stevemolitor/claude-code.el"
-           ))
+(package! shell-maker)
+(package! acp)
+(package! agent-shell)
