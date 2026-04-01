@@ -8,6 +8,7 @@ local bufnr = vim.api.nvim_get_current_buf()
 local wk = require("which-key")
 
 map("n", "<leader>w", ":w!<cr>", { desc = "Write Force" })
+map("n", "<leader>fs", ":w!<cr>", { desc = "Write Force" })
 map("n", "<leader>q", ":q!<cr>", { desc = "Quit force" })
 map("n", "<leader>x", ":x!<cr>", { desc = "Write and quit force" })
 map("n", "<S-l>", ":bnext<cr>", { desc = "Next Buffer" })
@@ -15,13 +16,19 @@ map("n", "<S-h>", ":bprevious<cr>", { desc = "Previous Buffer" })
 
 -- window splitting
 map("n", "<leader>v", ":vsplit<cr>", { desc = "Vertical Split" })
+map("n", "<leader>wv", ":vsplit<cr>", { desc = "Vertical Split" })
 map("n", "<leader>s", ":split<cr>", { desc = "Horizontal Split" })
+map("n", "<leader>ws", ":split<cr>", { desc = "Horizontal Split" })
 
 -- window navigation
 map("n", "<leader>h", "<C-w>h", { desc = "Go to Left Window", remap = true })
+map("n", "<leader>wh", "<C-w>h", { desc = "Go to Left Window", remap = true })
 map("n", "<leader>j", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+map("n", "<leader>wj", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 map("n", "<leader>k", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+map("n", "<leader>wk", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 map("n", "<leader>l", "<C-w>l", { desc = "Go to Right Window", remap = true })
+map("n", "<leader>wl", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
 -- close window
 map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
@@ -70,9 +77,9 @@ map("n", "<leader>gr", require("telescope.builtin").lsp_references, { desc = "Go
 map("n", "<leader>gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
 map("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format code" })
 map("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diagnostics in floating window" })
--- map("n", "<leader>gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
--- map("n", "<leader>gs", vim.lsp.buf.signature_help, { desc = "Show signature help" })
--- map("n", "<leader>gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
+map("n", "<leader>gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+map("n", "<leader>gs", vim.lsp.buf.signature_help, { desc = "LSP Signature Help" })
+map("n", "<leader>gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
 
 -- telescope
 wk.add({ "<leader>f", group = "Telescope", icon = "" })
