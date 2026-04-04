@@ -213,10 +213,7 @@ fi
 if [ -f "$HOME/_argocd" ]; then
     source "$HOME/_argocd"
 fi
-
-
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/dkraklan/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
+ 
+if [ -f "$HOME/.zshlocal" ]; then
+    source "$HOME/.zshlocal"
+fi
