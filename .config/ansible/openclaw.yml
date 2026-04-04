@@ -1,0 +1,6 @@
+- name: Apply openclaw configuration
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  roles:
+    - openclaw

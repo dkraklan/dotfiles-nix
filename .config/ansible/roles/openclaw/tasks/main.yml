@@ -1,0 +1,8 @@
+---
+- name: Install Bitwarden Secrets Manager CLI
+  kewlfft.aur.aur:
+    use: yay
+    name: bws-bin
+    state: present
+  become: yes
+  become_user: aur_builder
