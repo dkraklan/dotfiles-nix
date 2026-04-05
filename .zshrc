@@ -77,38 +77,71 @@ if [[ "$(uname)" != "Darwin" ]]; then
     fi
 
 else
-    #Macos config
-    source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-    source $(brew --prefix zsh-autosuggestions)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    eval "$(zoxide init zsh)"
+    # macOS config
+
+    # Homebrew must be initialized FIRST
+    if [[ -x /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x /usr/local/bin/brew ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+
+    # Plugins (safe to call brew now)
+
+    if [[ -r "$(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh" ]]; then
+        source "$(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
+    fi
+
+    if [[ -r "$(brew --prefix zsh-autosuggestions)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+        source "$(brew --prefix zsh-autosuggestions)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    fi
+
+    if [[ -r "$(brew --prefix zsh-syntax-highlighting)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+        source "$(brew --prefix zsh-syntax-highlighting)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    fi
+
+    # Tools
+    if command -v zoxide >/dev/null 2>&1; then
+        eval "$(zoxide init zsh)"
+    fi
+
     ZSH_THEME="powerlevel10k/powerlevel10k"
-    ssh-add .ssh/dylan_id_ed25519
-    ssh-add .ssh/id_github_ed25519
+
+    # Only add keys in interactive shells
+    if [[ -o interactive ]]; then
+        ssh-add ~/.ssh/dylan_id_ed25519 2>/dev/null
+        ssh-add ~/.ssh/id_github_ed25519 2>/dev/null
+    fi
+
     plugins=(
         git
         docker
-        # poetry-env
-        # zsh-autosuggestions
     )
-	alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-	alias pathssh="~/.scripts/path_ssh_proxy.sh"
-	alias dirgrep="~/.scripts/dirgrep.sh"
-	alias pathdb="~/.scripts/db_proxy.sh"
-	alias catclip="~/.scripts/catclip.sh"
-	alias sslexpire="~/.scripts/sslexpire.sh"
-	alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+    # Aliases
+    alias subl="/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+    alias pathssh="~/.scripts/path_ssh_proxy.sh"
+    alias dirgrep="~/.scripts/dirgrep.sh"
+    alias pathdb="~/.scripts/db_proxy.sh"
+    alias catclip="~/.scripts/catclip.sh"
+    alias sslexpire="~/.scripts/sslexpire.sh"
+    alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
     alias tl="/Users/dkraklan/.config/scripts/tmux_launch.sh"
-	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-    export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
-	export PATH=/opt/homebrew/bin:$PATH
-	alias python=python3
+    alias python=python3
 
-	function gam() { "/Users/dkraklan/bin/gam/gam" "$@" ; }
-  
-	eval "$(starship init zsh)"
+    # Extra PATH additions (brew already handled by shellenv)
+    if brew list libpq >/dev/null 2>&1; then
+        export PATH="$(brew --prefix libpq)/bin:$PATH"
+    fi
 
+    if brew list mysql-client >/dev/null 2>&1; then
+        export PATH="$(brew --prefix mysql-client)/bin:$PATH"
+    fi
 
+    alias gam="/Users/dkraklan/bin/gam/gam"
+    if command -v starship >/dev/null 2>&1; then
+        eval "$(starship init zsh)"
+    fi
 fi
 
 
@@ -217,3 +250,5 @@ fi
 if [ -f "$HOME/.zshlocal" ]; then
     source "$HOME/.zshlocal"
 fi
+
+
