@@ -184,6 +184,13 @@ setopt appendhistory
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
+# --- Completion tuning ---
+# Speed up ssh/scp/sftp host completion: skip approximate matching + DNS
+zstyle ':completion:*:(ssh|scp|sftp|rsync|ssh-copy-id):*' completer _expand _complete
+zstyle ':completion:*:(ssh|scp|sftp|rsync|ssh-copy-id):*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' use-ip false
+zstyle ':completion:*' hosts-resolve false
+
 # --- Keybindings ---
 bindkey '^y' autosuggest-accept
 
@@ -202,3 +209,8 @@ fi
 # Local overrides
 [[ -f "$HOME/_argocd" ]] && source "$HOME/_argocd"
 [[ -f "$HOME/.zshlocal" ]] && source "$HOME/.zshlocal"
+
+
+# Added by ToolHive UI - do not modify this block
+export PATH="$HOME/.toolhive/bin:$PATH"
+# End ToolHive UI
