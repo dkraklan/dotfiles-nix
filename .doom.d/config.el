@@ -95,6 +95,21 @@
   (run-with-idle-timer 0.5 nil #'display-workspaces-in-minibuffer)
   (+workspace/display))
 
+(after! treemacs-all-the-icons
+  (treemacs-modify-theme "all-the-icons"
+    :config
+    (treemacs-create-icon
+     :icon (format "%s\t%s\t"
+                   (all-the-icons-octicon "chevron-right"
+                                          :height 0.75
+                                          :v-adjust 0.1
+                                          :face 'treemacs-all-the-icons-file-face)
+                   (all-the-icons-octicon "file-directory"
+                                          :height 0.95
+                                          :v-adjust 0
+                                          :face 'treemacs-all-the-icons-file-face))
+     :extensions ("docs" "doc" "documentation"))))
+
 (setq markdown-fontify-code-blocks-natively nil)
 
 (use-package org-roam
@@ -103,6 +118,9 @@
   (org-roam-directory "~/SynologyDrive/Documents/org/roam")
   (org-id-locations-file "~/SynologyDrive/Documents/org/roam/.orgids")
   (org-roam-completion-everywhere t)
+  ;; Use explicit widths so the title column doesn't get squashed by Vertico/`*`-fill quirks
+  (org-roam-node-display-template
+   (concat "${title:80} " (propertize "${tags:30}" 'face 'org-tag)))
   (org-roam-capture-templates
    '(("d" "default" plain
       "%?"
@@ -321,7 +339,8 @@ fixed-pitch))
               (visual-line-mode 1)
               ;; (text-scale-set 2)
               (visual-fill-column-mode)
-              (setq-default visual-fill-column-center-text t)
+              (setq-default visual-fill-column-center-text t
+                            visual-fill-column-width 150)
               (setq display-line-numbers nil)
               ;; Add this to your configuration to ensure tables use fixed-pitch font
               (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
